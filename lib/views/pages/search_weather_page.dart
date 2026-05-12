@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/utils/app_assets.dart';
+import 'package:weather_app/utils/theme/app_colors.dart';
 
 class SearchWeatherPage extends StatefulWidget {
   const SearchWeatherPage({super.key});
@@ -46,11 +47,7 @@ class _SearchWeatherPageState extends State<SearchWeatherPage> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(32.0),
                       gradient: LinearGradient(
-                        colors: [
-                          Color.fromARGB(255, 33, 21, 84),
-                          Color.fromARGB(255, 12, 13, 55),
-                          Color.fromARGB(255, 7, 8, 46),
-                        ],
+                        colors: AppColors.nightColors,
                       ),
                     ),
                     child: Center(
@@ -77,7 +74,7 @@ class _SearchWeatherPageState extends State<SearchWeatherPage> {
                     onPressed: () {},
                     iconSize: size.height * 0.04,
                     style: IconButton.styleFrom(
-                      backgroundColor: Color(0xFF1b1145),
+                      backgroundColor: Color(0xFF1b1145), // TODO: Need to remove it later
                     ),
                     icon: Icon(Icons.location_on_outlined),
                   ),

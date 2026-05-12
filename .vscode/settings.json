@@ -1,6 +1,8 @@
 {
     "cmake.ignoreCMakeListsMissing": true,
     "cSpell.words": [
+        "allprojects",
         "Madinah"
-    ]
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

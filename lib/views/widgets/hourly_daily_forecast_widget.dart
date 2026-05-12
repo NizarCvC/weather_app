@@ -2,21 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/models/weather_models/daily_weather.dart';
 import 'package:weather_app/models/weather_models/hourly_weather.dart';
 
-class HourlyDailyForcastWidget extends StatelessWidget {
+class HourlyDailyForecastWidget extends StatelessWidget {
   final List<HourlyWeather>? hourlyList;
   final List<DailyWeather>? dailyList;
-  const HourlyDailyForcastWidget({super.key, this.hourlyList, this.dailyList})
-    : assert(
-        (hourlyList != null && dailyList == null) ||
-            (hourlyList == null && dailyList != null),
-        'يجب تمرير قيمة واحدة فقط: إما hourlyList أو dailyList، وليس كلاهما',
-      );
+  const HourlyDailyForecastWidget.hourly({
+    super.key,
+    required List<HourlyWeather> this.hourlyList, 
+  }) : dailyList = null;
+
+  const HourlyDailyForecastWidget.daily({
+    super.key,
+    required List<DailyWeather> this.dailyList,
+  }) : hourlyList = null;
+
 
   Widget _buildHourlyWeatherItem(
     BuildContext context,
     HourlyWeather hourlyItem,
   ) {
-    final size = MediaQuery.of(context).size;
     return Column(
       mainAxisAlignment: .center,
       children: [
@@ -37,7 +40,6 @@ class HourlyDailyForcastWidget extends StatelessWidget {
   }
 
   Widget _buildDailyWeatherItem(BuildContext context, DailyWeather dailyItem) {
-    final size = MediaQuery.of(context).size;
     return Column(
       mainAxisAlignment: .center,
       children: [
@@ -59,7 +61,6 @@ class HourlyDailyForcastWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: (hourlyList != null)
