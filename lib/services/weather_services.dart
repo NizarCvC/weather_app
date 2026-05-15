@@ -30,7 +30,7 @@ class WeatherServicesImpl implements WeatherServices {
     if (cityList.isEmpty) {
       throw Exception("No city found");
     }
-    return CityModel.fromJson(cityList.first);
+    return CityModel.fromMap(cityList.first);
   }
 
   @override

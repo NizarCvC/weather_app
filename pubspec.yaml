@@ -17,6 +17,7 @@ dependencies:
   lottie: ^3.3.3
   animated_bottom_navigation_bar: ^1.4.0
   adv_flutter_weather: ^1.0.0
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_lints: ^6.0.0
@@ -91,3 +92,11 @@ flutter:
     - assets/weather/Weather Icon-62.svg
     - assets/weather/Weather Icon-63.svg
     - assets/weather/Weather Icon.svg
+    - assets/icons/cloud.png
+    - assets/icons/humidity.png
+    - assets/icons/pressure.png
+    - assets/icons/rain.png
+    - assets/icons/uv.png
+    - assets/icons/vision.png
+    - assets/icons/wind.png
+    - assets/icons/feels_like.png
