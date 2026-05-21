@@ -14,6 +14,7 @@ class SavedWeathersPage extends StatelessWidget {
           'Saved weathers',
           style: Theme.of(context).textTheme.headlineMedium,
         ),
+        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.edit))],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

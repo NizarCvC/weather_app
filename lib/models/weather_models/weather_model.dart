@@ -36,19 +36,25 @@ class WeatherModel {
       current: json['current'] != null
           ? CurrentWeather.fromJson(json['current'])
           : null,
-      minutely: (json['minutely'] as List<dynamic>?)
+      minutely:
+          (json['minutely'] as List<dynamic>?)
               ?.map((e) => MinutelyWeather.fromJson(e))
               .toList() ??
           [],
-      hourly: (json['hourly'] as List<dynamic>?)
+      hourly:
+          (json['hourly'] as List<dynamic>?)
               ?.map((e) => HourlyWeather.fromJson(e))
+              .take(24)
               .toList() ??
           [],
-      daily: (json['daily'] as List<dynamic>?)
+      daily:
+          (json['daily'] as List<dynamic>?)
               ?.map((e) => DailyWeather.fromJson(e))
+              .take(7)
               .toList() ??
           [],
-      alerts: (json['alerts'] as List<dynamic>?)
+      alerts:
+          (json['alerts'] as List<dynamic>?)
               ?.map((e) => WeatherAlert.fromJson(e))
               .toList() ??
           [],

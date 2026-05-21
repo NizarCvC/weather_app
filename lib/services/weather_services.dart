@@ -7,6 +7,7 @@ import 'package:weather_app/utils/app_constants.dart';
 
 abstract class WeatherServices {
   Future<WeatherModel> getCityWeather(String cityName);
+  Future<List<CityModel>> getCitesList(String cityName);
 }
 
 class WeatherServicesImpl implements WeatherServices {
@@ -55,5 +56,24 @@ class WeatherServicesImpl implements WeatherServices {
     } catch (e) {
       rethrow;
     }
+  }
+  
+  @override
+  Future<List<CityModel>> getCitesList(String cityName) async {
+     final geocodingQueryParams = GeocodingQueryParams(
+      q: cityName,
+      appid: AppConstants.apiKey,
+    );
+    final geocodingResponse = await dio.get(
+      AppConstants.geocodingUrl,
+      queryParameters: geocodingQueryParams.toMap(),
+    );
+
+    if (geocodingResponse.statusCode != 200) {
+      throw Exception(geocodingResponse.statusMessage);
+    }
+
+    final cityList = geocodingResponse.data as List;
+    return cityList.map((e) => CityModel.fromMap(e)).toList();
   }
 }

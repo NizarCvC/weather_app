@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/utils/app_assets.dart';
 import 'package:weather_app/utils/theme/app_colors.dart';
+import 'package:weather_app/view_models/weather_cubit/weather_cubit.dart';
+import 'package:weather_app/views/widgets/city_result_widget.dart';
 
 class SearchWeatherPage extends StatefulWidget {
   const SearchWeatherPage({super.key});
@@ -27,6 +30,7 @@ class _SearchWeatherPageState extends State<SearchWeatherPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final cubit = BlocProvider.of<WeatherCubit>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -34,56 +38,93 @@ class _SearchWeatherPageState extends State<SearchWeatherPage> {
           style: Theme.of(context).textTheme.headlineMedium,
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Container(
-                    height: size.height * 0.06,
-                    width: size.width * 0.78,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(32.0),
-                      gradient: LinearGradient(
-                        colors: AppColors.nightColors,
-                      ),
-                    ),
-                    child: Center(
-                      child: TextField(
-                        style: TextStyle(),
-                        controller: _searchController,
-                        decoration: InputDecoration(
-                          suffixIcon: Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: Icon(
-                              size: size.height * 0.035,
-                              Icons.search,
-                              color: Colors.grey[600],
-                            ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                  height: size.height * 0.06,
+                  width: size.width * 0.78,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(32.0),
+                    gradient: LinearGradient(colors: AppColors.nightColors),
+                  ),
+                  child: Center(
+                    child: TextField(
+                      style: TextStyle(),
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        suffixIcon: Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Icon(
+                            size: size.height * 0.035,
+                            Icons.search,
+                            color: Colors.grey[600],
                           ),
-                          hintText: 'Search',
-                          border: OutlineInputBorder(borderSide: .none),
                         ),
+                        hintText: 'Search',
+                        border: OutlineInputBorder(borderSide: .none),
                       ),
                     ),
                   ),
-                  Spacer(),
-                  IconButton(
-                    onPressed: () {},
-                    iconSize: size.height * 0.04,
-                    style: IconButton.styleFrom(
-                      backgroundColor: Color(0xFF1b1145), // TODO: Need to remove it later
-                    ),
-                    icon: Icon(Icons.location_on_outlined),
+                ),
+                Spacer(),
+                IconButton(
+                  onPressed: () async {
+                    if (_searchController.text.isNotEmpty) {
+                      await cubit.searchingWeather(_searchController.text);
+                    }
+                  },
+                  iconSize: size.height * 0.04,
+                  style: IconButton.styleFrom(
+                    backgroundColor: AppColors.nightColorLight,
                   ),
-                ],
-              ),
-              SizedBox(height: size.height * 0.15),
-              Image.asset(height: size.height * 0.35, AppAssets.empty),
-            ],
-          ),
+                  icon: Icon(Icons.location_on_outlined),
+                ),
+              ],
+            ),
+            SizedBox(height: size.height * 0.04),
+            BlocBuilder(
+              bloc: cubit,
+              buildWhen: (previous, current) =>
+                  current is SearchingWeatherName ||
+                  current is SearchedWeatherName ||
+                  current is SearchingWeatherNameFailed,
+              builder: (context, state) {
+                if (state is SearchingWeatherName) {
+                  return const CircularProgressIndicator.adaptive();
+                } else if (state is SearchedWeatherName) {
+                  final citiesList = state.cityModels;
+                  if (citiesList.isEmpty) {
+                    return Center(
+                      child: Image.asset(
+                        height: size.height * 0.35,
+                        AppAssets.empty,
+                      ),
+                    );
+                  }
+                  return Expanded(
+                    child: ListView.builder(
+                      itemCount: citiesList.length,
+                      itemBuilder: (context, index) =>
+                          CityResultWidget(cityModel: citiesList[index]),
+                    ),
+                  );
+                } else if (state is SearchingWeatherNameFailed) {
+                  return Center(
+                    child: Image.asset(
+                      height: size.height * 0.35,
+                      AppAssets.empty,
+                    ),
+                  );
+                } else {
+                  return SizedBox.shrink();
+                }
+              },
+            ),
+          ],
         ),
       ),
     );

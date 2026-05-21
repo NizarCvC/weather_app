@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/models/weather_models/weather_model.dart';
 import 'package:weather_app/utils/router/app_routes.dart';
 import 'package:weather_app/view_models/weather_cubit/weather_cubit.dart';
 import 'package:weather_app/views/pages/current_weather_page.dart';
@@ -22,9 +23,20 @@ class AppRouter {
           ),
         );
       case AppRoutes.searchWeather:
-        return MaterialPageRoute(builder: (_) => SearchWeatherPage());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => WeatherCubit(),
+            child: SearchWeatherPage(),
+          ),
+        );
       case AppRoutes.forecastReportWeather:
-        return MaterialPageRoute(builder: (_) => ForecastReportPage());
+        return MaterialPageRoute(
+          builder: (_) {
+            final WeatherModel weatherModel =
+                settings.arguments as WeatherModel;
+            return ForecastReportPage(weatherModel: weatherModel);
+          },
+        );
       case AppRoutes.savedWeathers:
         return MaterialPageRoute(builder: (_) => SavedWeathersPage());
       default:

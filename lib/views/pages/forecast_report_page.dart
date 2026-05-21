@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/temp/hourly_data.dart';
+import 'package:weather_app/models/weather_models/weather_model.dart';
 import 'package:weather_app/utils/app_assets.dart';
 import 'package:weather_app/views/widgets/hourly_daily_forecast_widget.dart';
 import 'package:weather_app/views/widgets/weather_card.dart';
 import 'package:weather_app/views/widgets/weather_day_widget.dart';
 
 class ForecastReportPage extends StatelessWidget {
-  const ForecastReportPage({super.key});
+  final WeatherModel weatherModel;
+  const ForecastReportPage({super.key, required this.weatherModel});
 
   Widget _buildTitle({required BuildContext context, required String title}) {
     final size = MediaQuery.of(context).size;
@@ -47,7 +48,7 @@ class ForecastReportPage extends StatelessWidget {
               SizedBox(
                 height: size.height * 0.2,
                 child: HourlyDailyForecastWidget.hourly(
-                  hourlyList: HourlyData.dummyHourlyList,
+                  hourlyList: weatherModel.hourly,
                 ),
               ),
               _buildTitle(context: context, title: 'Next forecast'),
@@ -55,8 +56,9 @@ class ForecastReportPage extends StatelessWidget {
               ListView.separated(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: 7,
-                itemBuilder: (context, index) => WeatherDayWidget(),
+                itemCount: weatherModel.daily.length,
+                itemBuilder: (context, index) =>
+                    WeatherDayWidget(dailyWeather: weatherModel.daily[index]),
                 separatorBuilder: (context, index) =>
                     SizedBox(height: size.height * 0.02),
               ),
@@ -75,42 +77,42 @@ class ForecastReportPage extends StatelessWidget {
                   WeatherCard(
                     iconPath: AppAssets.feelsLikeIcon,
                     title: 'Feels Like',
-                    info: '20°',
+                    info: '${weatherModel.current!.feelsLike.round()}°',
                   ),
                   WeatherCard(
                     iconPath: AppAssets.visionIcon,
                     title: 'Vision',
-                    info: '16 Km',
+                    info: '${weatherModel.current!.visibility} Km',
                   ),
                   WeatherCard(
                     iconPath: AppAssets.uvIcon,
                     title: 'UV Index',
-                    info: '2',
+                    info: '${weatherModel.current!.uvi}',
                   ),
                   WeatherCard(
                     iconPath: AppAssets.windIcon,
-                    title: 'Wind',
-                    info: '2',
+                    title: 'Wind Speed',
+                    info: '${weatherModel.current!.windSpeed}',
                   ),
                   WeatherCard(
                     iconPath: AppAssets.humidityIcon,
                     title: 'Humidity',
-                    info: '2',
+                    info: '${weatherModel.current!.humidity}',
                   ),
                   WeatherCard(
                     iconPath: AppAssets.pressureIcon,
                     title: 'Pressure',
-                    info: '2',
+                    info: '${weatherModel.current!.pressure}',
                   ),
                   WeatherCard(
                     iconPath: AppAssets.cloudIcon,
                     title: 'Cloudiness',
-                    info: '20%',
+                    info: '${weatherModel.current!.clouds}%',
                   ),
                   WeatherCard(
                     iconPath: AppAssets.rainIcon,
                     title: 'Rain',
-                    info: '2 mm',
+                    info: '${weatherModel.current!.rain?.oneHour ?? 0} mm',
                   ),
                 ],
               ),

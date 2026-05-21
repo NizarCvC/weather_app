@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:weather_app/models/weather_models/daily_weather.dart';
+import 'package:weather_app/utils/helpers/date_time_helper.dart';
 import 'package:weather_app/utils/theme/app_colors.dart';
 
 class WeatherDayWidget extends StatelessWidget {
-  const WeatherDayWidget({super.key});
+  final DailyWeather dailyWeather;
+  const WeatherDayWidget({super.key, required this.dailyWeather});
 
   @override
   Widget build(BuildContext context) {
@@ -21,20 +24,27 @@ class WeatherDayWidget extends StatelessWidget {
         child: Row(
           mainAxisAlignment: .spaceBetween,
           children: [
-            Column(
-              mainAxisAlignment: .center,
-              children: [
-                Text(
-                  'Sunday',
-                  style: textTheme.titleLarge!.copyWith(fontWeight: .w500),
-                ),
-                Text(
-                  'March,1',
-                  style: textTheme.titleMedium!.copyWith(fontWeight: .w400),
-                ),
-              ],
+            SizedBox(
+              height: double.infinity,
+              width: size.width * 0.3,
+              child: Column(
+                mainAxisAlignment: .center,
+                children: [
+                  Text(
+                    DateTimeHelper.getDayName(dailyWeather.dt),
+                    style: textTheme.titleLarge!.copyWith(fontWeight: .w500),
+                  ),
+                  Text(
+                    DateTimeHelper.getDayAndMonth(dailyWeather.dt),
+                    style: textTheme.titleMedium!.copyWith(fontWeight: .w400),
+                  ),
+                ],
+              ),
             ),
-            Text('20°', style: textTheme.displaySmall),
+            Text(
+              '${dailyWeather.temp.day.round()}°',
+              style: textTheme.displaySmall,
+            ),
             SvgPicture.asset(
               height: size.height * 0.05,
               width: size.width * 0.05,

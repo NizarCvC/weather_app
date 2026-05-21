@@ -50,7 +50,7 @@ class HourlyDailyForecastWidget extends StatelessWidget {
       mainAxisAlignment: .center,
       children: [
         Text(
-          DateTimeHelper.getDayName(dailyItem.dt),
+          DateTimeHelper.getShortDayName(dailyItem.dt),
           style: Theme.of(context).textTheme.titleMedium,
         ),
         Card(
@@ -63,7 +63,10 @@ class HourlyDailyForecastWidget extends StatelessWidget {
             child: Icon(Icons.cloud),
           ),
         ),
-        Text("${dailyItem.temp.day.round()}°", style: Theme.of(context).textTheme.titleMedium),
+        Text(
+          "${dailyItem.temp.day.round()}°",
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
       ],
     );
   }
@@ -77,7 +80,7 @@ class HourlyDailyForecastWidget extends StatelessWidget {
               itemCount: hourlyList!.length,
               scrollDirection: .horizontal,
               itemBuilder: (context, index) => Padding(
-                padding: const EdgeInsets.only(right: 10.0),
+                padding: const EdgeInsets.only(right: 8.0),
                 child: _buildHourlyWeatherItem(context, hourlyList![index]),
               ),
             )
@@ -85,7 +88,7 @@ class HourlyDailyForecastWidget extends StatelessWidget {
               itemCount: dailyList!.length,
               scrollDirection: .horizontal,
               itemBuilder: (context, index) => Padding(
-                padding: const EdgeInsets.only(right: 10.0),
+                padding: const EdgeInsets.only(right: 8.0),
                 child: _buildDailyWeatherItem(context, dailyList![index]),
               ),
             ),

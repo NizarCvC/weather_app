@@ -5,6 +5,7 @@ class AppColors {
   static Color bottomNavigationColor = Color(0xFF14243e);
   static Color themeColor = Color(0xFF45329a);
   static Color nightColor = Color(0xFF050624);
+  static Color nightColorLight = Color.fromARGB(255, 33, 21, 81);
   static List<Color> nightColors = [
     Color.fromARGB(255, 33, 21, 81),
     Color.fromARGB(255, 10, 11, 51),
