@@ -1,14 +1,10 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:weather_app/utils/router/app_routes.dart';
 import 'package:weather_app/utils/theme/app_colors.dart';
-import 'package:adv_flutter_weather/bg/weather_bg.dart';
-import 'package:adv_flutter_weather/utils/weather_type.dart';
 import 'package:weather_app/view_models/weather_cubit/weather_cubit.dart';
 import 'package:weather_app/views/widgets/city_weather_widget.dart';
-import 'package:weather_app/views/widgets/hourly_daily_forecast_widget.dart';
 
 class CurrentWeatherPage extends StatelessWidget {
   const CurrentWeatherPage({super.key});

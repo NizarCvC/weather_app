@@ -26,7 +26,7 @@ class WeatherDayWidget extends StatelessWidget {
           children: [
             SizedBox(
               height: double.infinity,
-              width: size.width * 0.3,
+              width: size.width * 0.35,
               child: Column(
                 mainAxisAlignment: .center,
                 children: [
@@ -49,7 +49,7 @@ class WeatherDayWidget extends StatelessWidget {
               height: size.height * 0.05,
               width: size.width * 0.05,
               fit: .cover,
-              'assets/weather/Weather Icon-14.svg',
+              dailyWeather.weather.first.icon,
             ),
           ],
         ),

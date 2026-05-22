@@ -11,11 +11,25 @@ class WeatherCubit extends Cubit<WeatherState> {
 
   final WeatherServices _weatherServices = WeatherServicesImpl();
 
-  Future<void> fetchWeatherInfo() async {
+  Future<void> fetchWeatherInfoTemp() async {
     emit(FetchingWeatherInfo());
 
     try {
-      var weatherInfo = await _weatherServices.getCityWeather("Medina"); // TODO: Need to updated
+      var weatherInfo = await _weatherServices.getCityWeather(
+        "Medina",
+      );
+      emit(WeatherInfoFetched(weatherModel: weatherInfo));
+    } catch (e) {
+      debugPrint("Error has occurred $e");
+      emit(FetchingWeatherInfoFailed(e.toString()));
+    }
+  }
+
+  Future<void> fetchWeatherInfo(String cityName) async {
+    emit(FetchingWeatherInfo());
+
+    try {
+      var weatherInfo = await _weatherServices.getCityWeather(cityName);
       emit(WeatherInfoFetched(weatherModel: weatherInfo));
     } catch (e) {
       debugPrint("Error has occurred $e");

@@ -33,7 +33,6 @@ class WeatherItemWidget extends StatelessWidget {
             Column(
               crossAxisAlignment: .start,
               children: [
-                Text('H:24° L:40°', style: TextStyle(color: Colors.grey[500])),
                 Text(
                   'Madinah, Saudi',
                   style: textTheme.titleMedium!.copyWith(fontWeight: .w600),

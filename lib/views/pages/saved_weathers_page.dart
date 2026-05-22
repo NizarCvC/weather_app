@@ -24,7 +24,7 @@ class SavedWeathersPage extends StatelessWidget {
             crossAxisCount: 2,
             mainAxisSpacing: size.height * 0.03,
             crossAxisSpacing: size.width * 0.06,
-            mainAxisExtent: size.height * 0.2,
+            mainAxisExtent: size.height * 0.15,
           ),
           itemBuilder: (context, index) => WeatherItemWidget(),
         ),

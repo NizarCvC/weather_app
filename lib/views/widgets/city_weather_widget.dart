@@ -39,7 +39,7 @@ class _CityWeatherWidgetState extends State<CityWeatherWidget>
         alignment: .center,
         children: [
           WeatherBg(
-            weatherType: WeatherType.sunnyNight,
+            weatherType: widget.weatherInfo?.current?.weatherScreen ?? WeatherType.sunny,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
           ),
@@ -58,7 +58,7 @@ class _CityWeatherWidgetState extends State<CityWeatherWidget>
               ),
               SizedBox(height: size.height * 0.035),
               SvgPicture.asset(
-                'assets/weather/Weather Icon-7.svg',
+                widget.weatherInfo?.current?.weather.first.icon ?? 'assets/weather/Weather Icon.svg',
                 height: size.height * 0.18,
               ),
               SizedBox(height: size.height * 0.16),

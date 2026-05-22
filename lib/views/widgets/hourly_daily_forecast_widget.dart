@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:weather_app/models/weather_models/daily_weather.dart';
 import 'package:weather_app/models/weather_models/hourly_weather.dart';
 import 'package:weather_app/utils/helpers/date_time_helper.dart';
@@ -20,6 +21,7 @@ class HourlyDailyForecastWidget extends StatelessWidget {
     BuildContext context,
     HourlyWeather hourlyItem,
   ) {
+    final size = MediaQuery.of(context).size;
     return Column(
       mainAxisAlignment: .center,
       children: [
@@ -34,7 +36,10 @@ class HourlyDailyForecastWidget extends StatelessWidget {
           color: Color(0xFF2a3169),
           child: Padding(
             padding: const EdgeInsets.all(14.0),
-            child: Icon(Icons.cloud),
+            child: SvgPicture.asset(
+              hourlyItem.weather.first.icon,
+              height: size.height * 0.05,
+            ),
           ),
         ),
         Text(
@@ -46,6 +51,7 @@ class HourlyDailyForecastWidget extends StatelessWidget {
   }
 
   Widget _buildDailyWeatherItem(BuildContext context, DailyWeather dailyItem) {
+    final size = MediaQuery.of(context).size;
     return Column(
       mainAxisAlignment: .center,
       children: [
@@ -60,7 +66,10 @@ class HourlyDailyForecastWidget extends StatelessWidget {
           color: Color(0xFF2a3169),
           child: Padding(
             padding: const EdgeInsets.all(14.0),
-            child: Icon(Icons.cloud),
+            child: SvgPicture.asset(
+              dailyItem.weather.first.icon,
+              height: size.height * 0.05,
+            ),
           ),
         ),
         Text(

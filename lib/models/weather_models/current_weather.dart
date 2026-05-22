@@ -1,3 +1,4 @@
+import 'package:adv_flutter_weather/utils/weather_type.dart';
 import 'package:weather_app/models/weather_models/rain_data.dart';
 import 'package:weather_app/models/weather_models/weather_condition.dart';
 import 'package:weather_app/models/weather_models/snow_data.dart';
@@ -20,6 +21,7 @@ class CurrentWeather {
   final RainData? rain;
   final SnowData? snow;
   final List<WeatherCondition> weather;
+  WeatherType get weatherScreen => _mapWeatherScreen(weather.first.icon);
 
   CurrentWeather({
     required this.dt,
@@ -59,7 +61,8 @@ class CurrentWeather {
       windGust: (json['wind_gust'] as num?)?.toDouble(),
       rain: json['rain'] != null ? RainData.fromJson(json['rain']) : null,
       snow: json['snow'] != null ? SnowData.fromJson(json['snow']) : null,
-      weather: (json['weather'] as List<dynamic>?)
+      weather:
+          (json['weather'] as List<dynamic>?)
               ?.map((e) => WeatherCondition.fromJson(e))
               .toList() ??
           [],
@@ -85,6 +88,30 @@ class CurrentWeather {
       'rain': rain?.toJson(),
       'snow': snow?.toJson(),
       'weather': weather.map((e) => e.toJson()).toList(),
+    };
+  }
+
+  WeatherType _mapWeatherScreen(String icon) {
+    return switch (icon) {
+      '01d' => WeatherType.sunny,
+      '02d' => WeatherType.cloudy,
+      '03d' => WeatherType.cloudy,
+      '04d' => WeatherType.cloudy,
+      '09d' => WeatherType.middleRainy,
+      '10d' => WeatherType.lightRainy,
+      '11d' => WeatherType.heavyRainy,
+      '13d' => WeatherType.middleSnow,
+      '50d' => WeatherType.dusty,
+      '01n' => WeatherType.sunnyNight,
+      '02n' => WeatherType.cloudyNight,
+      '03n' => WeatherType.cloudy,
+      '04n' => WeatherType.cloudy,
+      '09n' => WeatherType.middleRainy,
+      '10n' => WeatherType.lightRainy,
+      '11n' => WeatherType.heavyRainy,
+      '13n' => WeatherType.middleSnow,
+      '50n' => WeatherType.dusty,
+      _ => WeatherType.sunny,
     };
   }
 }
