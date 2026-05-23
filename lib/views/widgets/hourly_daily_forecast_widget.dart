@@ -38,7 +38,7 @@ class HourlyDailyForecastWidget extends StatelessWidget {
             padding: const EdgeInsets.all(14.0),
             child: SvgPicture.asset(
               hourlyItem.weather.first.icon,
-              height: size.height * 0.05,
+              height: size.height * 0.04,
             ),
           ),
         ),
@@ -68,7 +68,7 @@ class HourlyDailyForecastWidget extends StatelessWidget {
             padding: const EdgeInsets.all(14.0),
             child: SvgPicture.asset(
               dailyItem.weather.first.icon,
-              height: size.height * 0.05,
+              height: size.height * 0.04,
             ),
           ),
         ),

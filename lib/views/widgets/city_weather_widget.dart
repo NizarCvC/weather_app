@@ -48,7 +48,7 @@ class _CityWeatherWidgetState extends State<CityWeatherWidget>
             children: [
               SizedBox(height: size.height * 0.1),
               Text(
-                widget.isLoading ? '--' : widget.weatherInfo?.timezone ?? 'Unknown',
+                widget.isLoading ? '--' : widget.weatherInfo?.cityName ?? 'Unknown',
                 style: Theme.of(context).textTheme.displayMedium,
               ),
               SizedBox(height: size.height * 0.02),

@@ -11,8 +11,12 @@ class CityResultWidget extends StatelessWidget {
 
   const CityResultWidget({super.key, required this.cityModel});
 
-  Widget _buildWeatherBottomSheetInfo(BuildContext context, WeatherCubit cubit) {
+  Widget _buildWeatherBottomSheetInfo(
+    BuildContext context,
+    WeatherCubit cubit,
+  ) {
     const fullSize = SheetOffset(0.86);
+    const minSize = SheetOffset(0.0);
     return BlocProvider.value(
       value: cubit,
       child: BlocBuilder<WeatherCubit, WeatherState>(
@@ -23,7 +27,7 @@ class CityResultWidget extends StatelessWidget {
         builder: (context, state) {
           if (state is WeatherInfoFetched) {
             return Sheet(
-              snapGrid: const SheetSnapGrid(snaps: [fullSize]),
+              snapGrid: const SheetSnapGrid(snaps: [minSize, fullSize]),
               decoration: MaterialSheetDecoration(
                 size: SheetSize.stretch,
                 color: Theme.of(context).colorScheme.secondaryContainer,
@@ -34,7 +38,7 @@ class CityResultWidget extends StatelessWidget {
             );
           } else {
             return Sheet(
-              snapGrid: const SheetSnapGrid(snaps: [fullSize]),
+              snapGrid: const SheetSnapGrid(snaps: [minSize, fullSize]),
               decoration: MaterialSheetDecoration(
                 size: SheetSize.stretch,
                 color: Theme.of(context).colorScheme.secondaryContainer,
@@ -67,7 +71,10 @@ class CityResultWidget extends StatelessWidget {
                   context,
                   ModalSheetRoute(
                     builder: (modalContext) {
-                      return _buildWeatherBottomSheetInfo(modalContext, weatherCubit);
+                      return _buildWeatherBottomSheetInfo(
+                        modalContext,
+                        weatherCubit,
+                      );
                     },
                   ),
                 );
@@ -87,7 +94,7 @@ class CityResultWidget extends StatelessWidget {
               ),
             ),
           );
-        }
+        },
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:weather_app/models/weather_models/daily_weather.dart';
 import 'package:weather_app/models/weather_models/weather_alert.dart';
 
 class WeatherModel {
+  final String cityName;
   final double lat;
   final double lon;
   final String timezone;
@@ -16,6 +17,7 @@ class WeatherModel {
   final List<WeatherAlert> alerts;
 
   WeatherModel({
+    required this.cityName,
     required this.lat,
     required this.lon,
     required this.timezone,
@@ -27,8 +29,9 @@ class WeatherModel {
     required this.alerts,
   });
 
-  factory WeatherModel.fromJson(Map<String, dynamic> json) {
+  factory WeatherModel.fromJson(String cityName, Map<String, dynamic> json) {
     return WeatherModel(
+      cityName: cityName,
       lat: (json['lat'] as num).toDouble(),
       lon: (json['lon'] as num).toDouble(),
       timezone: json['timezone'] ?? '',

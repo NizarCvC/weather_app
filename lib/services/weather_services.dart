@@ -52,7 +52,7 @@ class WeatherServicesImpl implements WeatherServices {
         throw Exception(weatherResponse.statusMessage);
       }
 
-      return WeatherModel.fromJson(weatherResponse.data);
+      return WeatherModel.fromJson(cityModel.name, weatherResponse.data);
     } catch (e) {
       rethrow;
     }
