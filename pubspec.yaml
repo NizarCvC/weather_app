@@ -12,13 +12,14 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^9.1.1
-  hive: ^2.2.3
   flutter_svg: ^2.2.4
   lottie: ^3.3.3
   animated_bottom_navigation_bar: ^1.4.0
   adv_flutter_weather: ^1.0.0
   intl: ^0.20.2
   smooth_sheets: ^1.0.2
+  shared_preferences: ^2.5.5
+  dio_cache_interceptor: ^4.0.6
 
 dev_dependencies:
   flutter_lints: ^6.0.0

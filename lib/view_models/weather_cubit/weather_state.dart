@@ -31,3 +31,33 @@ final class SearchingWeatherNameFailed extends WeatherState {
 
   SearchingWeatherNameFailed(this.errorMessage);
 }
+
+final class SavedCityName extends WeatherState {}
+
+final class SaveCityNameError extends WeatherState {
+  final String errorMessage;
+
+  SaveCityNameError(this.errorMessage);
+}
+
+final class UnsavedCityName extends WeatherState {}
+
+final class UnsaveCityNameError extends WeatherState {
+  final String errorMessage;
+
+  UnsaveCityNameError(this.errorMessage);
+}
+
+final class FetchingSavedWeatherCities extends WeatherState {}
+
+final class SavedWeatherCitiesFetched extends WeatherState {
+  final List<WeatherModel> weatherModels;
+
+  SavedWeatherCitiesFetched({required this.weatherModels});
+}
+
+final class FetchingSavedWeatherCitiesFailed extends WeatherState {
+  final String errorMessage;
+
+  FetchingSavedWeatherCitiesFailed(this.errorMessage);
+}

@@ -3,7 +3,9 @@ import 'package:weather_app/models/query_params_models/geocoding_query_params.da
 import 'package:weather_app/models/query_params_models/weather_query_params.dart';
 import 'package:weather_app/models/weather_models/weather_model.dart';
 import 'package:dio/dio.dart';
+import 'package:weather_app/utils/api_paths.dart';
 import 'package:weather_app/utils/app_constants.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart'; 
 
 abstract class WeatherServices {
   Future<WeatherModel> getCityWeather(String cityName);
@@ -11,16 +13,31 @@ abstract class WeatherServices {
 }
 
 class WeatherServicesImpl implements WeatherServices {
-  final dio = Dio();
+  final Dio dio = Dio();
+  
+  late final CacheOptions cacheOptions;
+
+  WeatherServicesImpl() {
+    cacheOptions = CacheOptions(
+      store: MemCacheStore(), 
+      policy: CachePolicy.request, 
+      hitCacheOnNetworkFailure: true,
+      hitCacheOnErrorCodes: [500, 502, 503, 504],
+      maxStale: const Duration(minutes: 30), 
+    );
+    dio.interceptors.add(DioCacheInterceptor(options: cacheOptions));
+  }
 
   Future<CityModel> _getCityGeocoding(String cityName) async {
     final geocodingQueryParams = GeocodingQueryParams(
       q: cityName,
       appid: AppConstants.apiKey,
     );
+    
     final geocodingResponse = await dio.get(
-      AppConstants.geocodingUrl,
+      ApiPaths.geocodingUrl,
       queryParameters: geocodingQueryParams.toMap(),
+      options: cacheOptions.copyWith(maxStale: const Duration(days: 30)).toOptions(),
     );
 
     if (geocodingResponse.statusCode != 200) {
@@ -43,8 +60,9 @@ class WeatherServicesImpl implements WeatherServices {
         lon: cityModel.lon,
         appid: AppConstants.apiKey,
       );
+      
       final weatherResponse = await dio.get(
-        AppConstants.weatherUrl,
+        ApiPaths.weatherUrl,
         queryParameters: weatherQueryParams.toMap(),
       );
 
@@ -64,9 +82,11 @@ class WeatherServicesImpl implements WeatherServices {
       q: cityName,
       appid: AppConstants.apiKey,
     );
+    
     final geocodingResponse = await dio.get(
-      AppConstants.geocodingUrl,
+      ApiPaths.geocodingUrl,
       queryParameters: geocodingQueryParams.toMap(),
+      options: cacheOptions.copyWith(policy: CachePolicy.refresh).toOptions(),
     );
 
     if (geocodingResponse.statusCode != 200) {
