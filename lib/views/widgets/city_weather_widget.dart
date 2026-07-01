@@ -39,7 +39,8 @@ class _CityWeatherWidgetState extends State<CityWeatherWidget>
         alignment: .center,
         children: [
           WeatherBg(
-            weatherType: widget.weatherInfo?.current?.weatherScreen ?? WeatherType.sunny,
+            weatherType:
+                widget.weatherInfo?.current?.weatherScreen ?? WeatherType.sunny,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
           ),
@@ -48,7 +49,9 @@ class _CityWeatherWidgetState extends State<CityWeatherWidget>
             children: [
               SizedBox(height: size.height * 0.1),
               Text(
-                widget.isLoading ? '--' : widget.weatherInfo?.cityName ?? 'Unknown',
+                widget.isLoading
+                    ? '--'
+                    : widget.weatherInfo?.cityName ?? 'Unknown',
                 style: Theme.of(context).textTheme.displayMedium,
               ),
               SizedBox(height: size.height * 0.02),
@@ -58,7 +61,8 @@ class _CityWeatherWidgetState extends State<CityWeatherWidget>
               ),
               SizedBox(height: size.height * 0.035),
               SvgPicture.asset(
-                widget.weatherInfo?.current?.weather.first.icon ?? 'assets/weather/Weather Icon.svg',
+                widget.weatherInfo?.current?.weather.first.icon ??
+                    'assets/weather/Weather Icon.svg',
                 height: size.height * 0.18,
               ),
               SizedBox(height: size.height * 0.16),
@@ -107,6 +111,7 @@ class _CityWeatherWidgetState extends State<CityWeatherWidget>
                         height: size.height * 0.2,
                         child: TabBarView(
                           controller: _tabController,
+                          physics: NeverScrollableScrollPhysics(),
                           children: [
                             HourlyDailyForecastWidget.hourly(
                               hourlyList: widget.weatherInfo?.hourly ?? [],

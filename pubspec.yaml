@@ -20,6 +20,8 @@ dependencies:
   smooth_sheets: ^1.0.2
   shared_preferences: ^2.5.5
   dio_cache_interceptor: ^4.0.6
+  geolocator: ^14.0.3
+  geocoding: ^4.0.0
 
 dev_dependencies:
   flutter_lints: ^6.0.0

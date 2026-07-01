@@ -16,7 +16,7 @@ class AppRouter {
           builder: (_) => BlocProvider(
             create: (context) {
               final cubit = WeatherCubit();
-              cubit.fetchWeatherInfoTemp();
+              cubit.fetchCurrentLocationWeather();
               return cubit;
             },
             child: CurrentWeatherPage(),

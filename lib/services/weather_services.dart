@@ -5,25 +5,27 @@ import 'package:weather_app/models/weather_models/weather_model.dart';
 import 'package:dio/dio.dart';
 import 'package:weather_app/utils/api_paths.dart';
 import 'package:weather_app/utils/app_constants.dart';
-import 'package:dio_cache_interceptor/dio_cache_interceptor.dart'; 
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:geocoding/geocoding.dart';
 
 abstract class WeatherServices {
-  Future<WeatherModel> getCityWeather(String cityName);
+  Future<WeatherModel> getCityWeatherByCityName(String cityName);
   Future<List<CityModel>> getCitesList(String cityName);
+  Future<WeatherModel> getCityWeatherByCoordinate(double lat, double lon);
 }
 
 class WeatherServicesImpl implements WeatherServices {
   final Dio dio = Dio();
-  
+
   late final CacheOptions cacheOptions;
 
   WeatherServicesImpl() {
     cacheOptions = CacheOptions(
-      store: MemCacheStore(), 
-      policy: CachePolicy.request, 
+      store: MemCacheStore(),
+      policy: CachePolicy.request,
       hitCacheOnNetworkFailure: true,
       hitCacheOnErrorCodes: [500, 502, 503, 504],
-      maxStale: const Duration(minutes: 30), 
+      maxStale: const Duration(minutes: 30),
     );
     dio.interceptors.add(DioCacheInterceptor(options: cacheOptions));
   }
@@ -33,11 +35,13 @@ class WeatherServicesImpl implements WeatherServices {
       q: cityName,
       appid: AppConstants.apiKey,
     );
-    
+
     final geocodingResponse = await dio.get(
       ApiPaths.geocodingUrl,
       queryParameters: geocodingQueryParams.toMap(),
-      options: cacheOptions.copyWith(maxStale: const Duration(days: 30)).toOptions(),
+      options: cacheOptions
+          .copyWith(maxStale: const Duration(days: 30))
+          .toOptions(),
     );
 
     if (geocodingResponse.statusCode != 200) {
@@ -52,7 +56,7 @@ class WeatherServicesImpl implements WeatherServices {
   }
 
   @override
-  Future<WeatherModel> getCityWeather(String cityName) async {
+  Future<WeatherModel> getCityWeatherByCityName(String cityName) async {
     try {
       final cityModel = await _getCityGeocoding(cityName);
       final weatherQueryParams = WeatherQueryParams(
@@ -60,7 +64,7 @@ class WeatherServicesImpl implements WeatherServices {
         lon: cityModel.lon,
         appid: AppConstants.apiKey,
       );
-      
+
       final weatherResponse = await dio.get(
         ApiPaths.weatherUrl,
         queryParameters: weatherQueryParams.toMap(),
@@ -75,14 +79,49 @@ class WeatherServicesImpl implements WeatherServices {
       rethrow;
     }
   }
-  
+
+  @override
+  Future<WeatherModel> getCityWeatherByCoordinate(
+    double lat,
+    double lon,
+  ) async {
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(lat, lon);
+
+      if (placemarks.isEmpty) {
+        throw Exception("Invalid coordinate");
+      }
+
+      String cityName = placemarks[0].locality ?? "";
+
+      final weatherQueryParams = WeatherQueryParams(
+        lat: lat,
+        lon: lon,
+        appid: AppConstants.apiKey,
+      );
+
+      final weatherResponse = await dio.get(
+        ApiPaths.weatherUrl,
+        queryParameters: weatherQueryParams.toMap(),
+      );
+
+      if (weatherResponse.statusCode != 200) {
+        throw Exception(weatherResponse.statusMessage);
+      }
+
+      return WeatherModel.fromJson(cityName, weatherResponse.data);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   @override
   Future<List<CityModel>> getCitesList(String cityName) async {
-     final geocodingQueryParams = GeocodingQueryParams(
+    final geocodingQueryParams = GeocodingQueryParams(
       q: cityName,
       appid: AppConstants.apiKey,
     );
-    
+
     final geocodingResponse = await dio.get(
       ApiPaths.geocodingUrl,
       queryParameters: geocodingQueryParams.toMap(),

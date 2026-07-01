@@ -32,16 +32,12 @@ class CityModel {
   factory CityModel.fromMap(Map<String, dynamic> map) {
     return CityModel(
       name: map['name'] ?? 'Unknown',
-      
       localNames: map['local_names'] != null 
           ? LocalNames.fromMap(map['local_names'] as Map<String, dynamic>)
           : null,
-          
       lat: (map['lat'] as num).toDouble(),
       lon: (map['lon'] as num).toDouble(),
-      
       country: map['country'] ?? 'Unknown',
-      
       state: map['state'] as String?,
     );
   }
