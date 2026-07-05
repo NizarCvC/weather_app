@@ -18,7 +18,7 @@ class WeatherQueryParams {
     required this.appid,
     this.exclude = const [],
     this.units = Units.metric,
-    this.lang = "en",
+    this.lang = 'en',
   });
 
   Map<String, dynamic> toMap() {
@@ -37,15 +37,15 @@ class WeatherQueryParams {
       lat: (map['lat'] as num).toDouble(),
       lon: (map['lon'] as num).toDouble(),
       appid: map['appid'] as String,
-      exclude: map["exclude"] != null
-          ? (map["exclude"] as String)
+      exclude: map['exclude'] != null
+          ? (map['exclude'] as String)
                 .split(',')
                 .map(
                   (e) => WeatherOptions.values.firstWhere((x) => x.name == e),
                 )
                 .toList()
           : [],
-      units: Units.values.firstWhere((x) => x.name == map["units"]),
+      units: Units.values.firstWhere((x) => x.name == map['units']),
       lang: map['lang'] as String,
     );
   }

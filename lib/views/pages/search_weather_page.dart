@@ -40,7 +40,7 @@ class _SearchWeatherPageState extends State<SearchWeatherPage> {
       child: Center(
         child: TextField(
           textInputAction: .search,
-          style: TextStyle(),
+          style: const TextStyle(),
           controller: _searchController,
           decoration: InputDecoration(
             suffixIcon: Padding(
@@ -52,7 +52,7 @@ class _SearchWeatherPageState extends State<SearchWeatherPage> {
               ),
             ),
             hintText: 'Search',
-            border: OutlineInputBorder(borderSide: .none),
+            border: const OutlineInputBorder(borderSide: .none),
           ),
           onSubmitted: (text) {
             if (_searchController.text.isNotEmpty) {
@@ -92,7 +92,7 @@ class _SearchWeatherPageState extends State<SearchWeatherPage> {
                   } else if (state is SearchedWeatherName) {
                     final citiesList = state.cityModels;
                     if (citiesList.isEmpty) {
-                      return EmptyWidget();
+                      return const EmptyWidget();
                     }
                     return ListView.builder(
                       itemCount: citiesList.length,
@@ -100,9 +100,9 @@ class _SearchWeatherPageState extends State<SearchWeatherPage> {
                           CityResultWidget(cityModel: citiesList[index]),
                     );
                   } else if (state is SearchingWeatherNameFailed) {
-                    return EmptyWidget();
+                    return const EmptyWidget();
                   } else {
-                    return SizedBox.shrink();
+                    return const SizedBox.shrink();
                   }
                 },
               ),

@@ -31,11 +31,11 @@ class WeatherItemWidget extends StatelessWidget {
               IconButton(
                 style: IconButton.styleFrom(
                   minimumSize: Size(size.width * 0.005, size.height * 0.005),
-                  padding: EdgeInsets.all(0),
+                  padding: const EdgeInsets.all(0),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
                 onPressed: () {},
-                icon: Icon(Icons.delete_outline_outlined),
+                icon: const Icon(Icons.delete_outline_outlined),
               ),
             ],
             Row(

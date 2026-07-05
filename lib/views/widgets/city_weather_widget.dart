@@ -82,7 +82,7 @@ class _CityWeatherWidgetState extends State<CityWeatherWidget>
               SizedBox(height: size.height * 0.16),
               Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     topRight: Radius.circular(32.0),
                     topLeft: Radius.circular(32.0),
                   ),
@@ -125,7 +125,7 @@ class _CityWeatherWidgetState extends State<CityWeatherWidget>
                         height: size.height * 0.2,
                         child: TabBarView(
                           controller: _tabController,
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           children: [
                             HourlyDailyForecastWidget.hourly(
                               hourlyList: widget.weatherInfo?.hourly ?? [],

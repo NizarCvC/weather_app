@@ -50,11 +50,7 @@ final class UnsaveCityNameError extends WeatherState {
 
 final class FetchingSavedWeatherCities extends WeatherState {}
 
-final class SavedWeatherCitiesFetched extends WeatherState {
-  final List<WeatherModel> weatherModels;
-
-  SavedWeatherCitiesFetched({required this.weatherModels});
-}
+final class SavedWeatherCitiesFetched extends WeatherState {}
 
 final class FetchingSavedWeatherCitiesFailed extends WeatherState {
   final String errorMessage;
@@ -64,4 +60,4 @@ final class FetchingSavedWeatherCitiesFailed extends WeatherState {
 
 final class ActiveDeletingSavedWeathers extends WeatherState {}
 
-final class UnActiveDeletingSavedWeathers extends WeatherState {}
+final class DeactivatedDeletingSavedWeathers extends WeatherState {}

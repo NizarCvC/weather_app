@@ -97,7 +97,7 @@ class ForecastReportPage extends StatelessWidget {
               SizedBox(height: size.height * 0.02),
               ListView.separated(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: weatherModel.daily.length,
                 itemBuilder: (context, index) =>
                     WeatherDayWidget(dailyWeather: weatherModel.daily[index]),
@@ -108,7 +108,7 @@ class ForecastReportPage extends StatelessWidget {
               SizedBox(height: size.height * 0.02),
               GridView(
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   mainAxisSpacing: size.height * 0.03,

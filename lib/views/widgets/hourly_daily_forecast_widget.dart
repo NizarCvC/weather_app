@@ -34,7 +34,7 @@ class HourlyDailyForecastWidget extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(100),
           ),
-          color: Color(0xFF2a3169),
+          color: const Color(0xFF2a3169),
           child: Padding(
             padding: const EdgeInsets.all(14.0),
             child: SvgPicture.asset(
@@ -43,8 +43,8 @@ class HourlyDailyForecastWidget extends StatelessWidget {
             ),
           ),
         ),
-        Text(
-          "${hourlyItem.feelsLike.round()}°",
+         Text(
+          '${hourlyItem.feelsLike.round()}°',
           style: Theme.of(context).textTheme.titleMedium,
         ),
       ],
@@ -64,7 +64,7 @@ class HourlyDailyForecastWidget extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(100),
           ),
-          color: Color(0xFF2a3169),
+          color: const Color(0xFF2a3169),
           child: Padding(
             padding: const EdgeInsets.all(14.0),
             child: SvgPicture.asset(
@@ -74,7 +74,7 @@ class HourlyDailyForecastWidget extends StatelessWidget {
           ),
         ),
         Text(
-          "${dailyItem.temp.day.round()}°",
+          '${dailyItem.temp.day.round()}°',
           style: Theme.of(context).textTheme.titleMedium,
         ),
       ],

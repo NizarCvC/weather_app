@@ -19,14 +19,14 @@ class AppRouter {
               cubit.fetchCurrentLocationWeather();
               return cubit;
             },
-            child: CurrentWeatherPage(),
+            child: const CurrentWeatherPage(),
           ),
         );
       case AppRoutes.searchWeather:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
             create: (context) => WeatherCubit(),
-            child: SearchWeatherPage(),
+            child: const SearchWeatherPage(),
           ),
         );
       case AppRoutes.forecastReportWeather:
@@ -45,7 +45,7 @@ class AppRouter {
               cubit.fetchSavedCitiesWeather();
               return cubit;
             },
-            child: SavedWeathersPage(),
+            child: const SavedWeathersPage(),
           ),
         );
       default:

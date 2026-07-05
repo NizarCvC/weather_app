@@ -51,7 +51,7 @@ class CityResultWidget extends StatelessWidget {
                           state.weatherModel.cityName,
                         );
                       },
-                      icon: Icon(Icons.add),
+                      icon: const Icon(Icons.add),
                     ),
                   ),
                 ],
@@ -66,7 +66,7 @@ class CityResultWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(32),
                 clipBehavior: Clip.antiAlias,
               ),
-              child: CityWeatherWidget.loading(),
+              child: const CityWeatherWidget.loading(),
             );
           }
         },

@@ -15,6 +15,9 @@ class WeatherCubit extends Cubit<WeatherState> {
   final _localDatabaseServices = LocalDatabaseServicesImpl();
   final _weatherServices = WeatherServicesImpl();
   bool _isDeletingSavedWeathersActive = false;
+  bool get isDeletingActive => _isDeletingSavedWeathersActive;
+  List<WeatherModel> _savedCitiesWeather = [];
+  List<WeatherModel> get savedCitiesWeather => _savedCitiesWeather;
 
   Future<Position?> _determinePosition() async {
     bool serviceEnabled;
@@ -58,11 +61,11 @@ class WeatherCubit extends Cubit<WeatherState> {
           position.longitude,
         );
       } else {
-        weatherInfo = await _weatherServices.getCityWeatherByCityName("Makkah");
+        weatherInfo = await _weatherServices.getCityWeatherByCityName('Makkah');
       }
       emit(WeatherInfoFetched(weatherModel: weatherInfo));
     } catch (e) {
-      debugPrint("Error has occurred $e");
+      debugPrint('Error has occurred $e');
       emit(FetchingWeatherInfoFailed(e.toString()));
     }
   }
@@ -76,7 +79,7 @@ class WeatherCubit extends Cubit<WeatherState> {
       );
       emit(WeatherInfoFetched(weatherModel: weatherInfo));
     } catch (e) {
-      debugPrint("Error has occurred $e");
+      debugPrint('Error has occurred $e');
       emit(FetchingWeatherInfoFailed(e.toString()));
     }
   }
@@ -88,7 +91,7 @@ class WeatherCubit extends Cubit<WeatherState> {
       var cityList = await _weatherServices.getCitesList(cityName);
       emit(SearchedWeatherName(cityModels: cityList));
     } catch (e) {
-      debugPrint("Error has occurred $e");
+      debugPrint('Error has occurred $e');
       emit(SearchingWeatherNameFailed(e.toString()));
     }
   }
@@ -118,6 +121,7 @@ class WeatherCubit extends Cubit<WeatherState> {
         AppConstants.localDatabaseKey,
         citiesList,
       );
+      _savedCitiesWeather = [];
       emit(SavedCityName());
     } catch (e) {
       emit(SaveCityNameError(e.toString()));
@@ -138,6 +142,7 @@ class WeatherCubit extends Cubit<WeatherState> {
         AppConstants.localDatabaseKey,
         citiesList,
       );
+      _savedCitiesWeather = [];
       emit(UnsavedCityName());
     } catch (e) {
       emit(UnsaveCityNameError(e.toString()));
@@ -151,7 +156,7 @@ class WeatherCubit extends Cubit<WeatherState> {
       final citiesList = await _prepareSavedCitiesList();
 
       if (citiesList.isEmpty) {
-        emit(SavedWeatherCitiesFetched(weatherModels: []));
+        emit(SavedWeatherCitiesFetched());
         return;
       }
 
@@ -171,8 +176,8 @@ class WeatherCubit extends Cubit<WeatherState> {
         final List<WeatherModel> batchResults = await Future.wait(futures);
         allWeatherResults.addAll(batchResults);
       }
-
-      emit(SavedWeatherCitiesFetched(weatherModels: allWeatherResults));
+      _savedCitiesWeather = allWeatherResults;
+      emit(SavedWeatherCitiesFetched());
     } catch (e) {
       emit(FetchingSavedWeatherCitiesFailed(e.toString()));
     }
@@ -181,10 +186,10 @@ class WeatherCubit extends Cubit<WeatherState> {
   void toggleActiveDeletingWeathers() {
     _isDeletingSavedWeathersActive = !_isDeletingSavedWeathersActive;
 
-    if (_isDeletingSavedWeathersActive == true) {
+    if (_isDeletingSavedWeathersActive) {
       emit(ActiveDeletingSavedWeathers());
     } else {
-      emit(UnActiveDeletingSavedWeathers());
+      emit(DeactivatedDeletingSavedWeathers());
     }
   }
 }

@@ -50,7 +50,7 @@ class WeatherServicesImpl implements WeatherServices {
 
     final cityList = geocodingResponse.data as List;
     if (cityList.isEmpty) {
-      throw Exception("No city found");
+      throw Exception('No city found');
     }
     return CityModel.fromMap(cityList.first);
   }
@@ -89,10 +89,10 @@ class WeatherServicesImpl implements WeatherServices {
       List<Placemark> placemarks = await placemarkFromCoordinates(lat, lon);
 
       if (placemarks.isEmpty) {
-        throw Exception("Invalid coordinate");
+        throw Exception('Invalid coordinate');
       }
 
-      String cityName = placemarks[0].locality ?? "";
+      String cityName = placemarks[0].locality ?? '';
 
       final weatherQueryParams = WeatherQueryParams(
         lat: lat,

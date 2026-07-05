@@ -38,7 +38,7 @@ class CurrentWeatherPage extends StatelessWidget {
       onPressed: onPressed,
       backgroundColor: AppColors.white,
       foregroundColor: AppColors.themeColor,
-      shape: CircleBorder(),
+      shape: const CircleBorder(),
       child: Icon(size: size.height * 0.04, Icons.add),
     );
   }
@@ -81,7 +81,7 @@ class CurrentWeatherPage extends StatelessWidget {
         } else {
           return Scaffold(
             extendBody: true,
-            body: CityWeatherWidget.loading(),
+            body: const CityWeatherWidget.loading(),
             floatingActionButton: _buildFloatingActionButton(context, () {}),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
