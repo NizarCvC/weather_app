@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/utils/router/app_routes.dart';
 import 'package:weather_app/utils/theme/app_colors.dart';
 import 'package:weather_app/view_models/weather_cubit/weather_cubit.dart';
-import 'package:weather_app/views/widgets/city_weather_widget.dart';
+import 'package:weather_app/views/widgets/current_weather_widgets/current_city_weather_widget.dart';
 
 class CurrentWeatherPage extends StatelessWidget {
   const CurrentWeatherPage({super.key});
@@ -55,7 +55,7 @@ class CurrentWeatherPage extends StatelessWidget {
           final weatherInfo = state.weatherModel;
           return Scaffold(
             extendBody: true,
-            body: CityWeatherWidget(weatherInfo: weatherInfo),
+            body: CurrentCityWeatherWidget(weatherInfo: weatherInfo),
             floatingActionButton: _buildFloatingActionButton(
               context,
               () => Navigator.of(context).pushNamed(AppRoutes.searchWeather),
@@ -81,7 +81,7 @@ class CurrentWeatherPage extends StatelessWidget {
         } else {
           return Scaffold(
             extendBody: true,
-            body: const CityWeatherWidget.loading(),
+            body: const CurrentCityWeatherWidget.loading(),
             floatingActionButton: _buildFloatingActionButton(context, () {}),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,

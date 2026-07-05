@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/utils/theme/app_colors.dart';
 import 'package:weather_app/view_models/weather_cubit/weather_cubit.dart';
-import 'package:weather_app/views/widgets/city_result_widget.dart';
-import 'package:weather_app/views/widgets/empty_widget.dart';
+import 'package:weather_app/views/widgets/search_weather_widgets/city_result_widget.dart';
+import 'package:weather_app/views/widgets/shared_widgets/empty_widget.dart';
 
 class SearchWeatherPage extends StatefulWidget {
   const SearchWeatherPage({super.key});

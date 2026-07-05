@@ -4,24 +4,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:weather_app/models/weather_models/weather_model.dart';
 import 'package:weather_app/utils/theme/app_colors.dart';
-import 'package:weather_app/views/widgets/hourly_daily_forecast_widget.dart';
+import 'package:weather_app/views/widgets/shared_widgets/hourly_daily_forecast_widget.dart';
 
-class CityWeatherWidget extends StatefulWidget {
+class CurrentCityWeatherWidget extends StatefulWidget {
   final WeatherModel? weatherInfo;
   final bool isLoading;
 
-  const CityWeatherWidget({super.key, required this.weatherInfo})
+  const CurrentCityWeatherWidget({super.key, required this.weatherInfo})
     : isLoading = false;
 
-  const CityWeatherWidget.loading({super.key})
+  const CurrentCityWeatherWidget.loading({super.key})
     : isLoading = true,
       weatherInfo = null;
 
   @override
-  State<CityWeatherWidget> createState() => _CityWeatherWidgetState();
+  State<CurrentCityWeatherWidget> createState() =>
+      _CurrentCityWeatherWidgetState();
 }
 
-class _CityWeatherWidgetState extends State<CityWeatherWidget>
+class _CurrentCityWeatherWidgetState extends State<CurrentCityWeatherWidget>
     with TickerProviderStateMixin {
   late final TabController _tabController;
 

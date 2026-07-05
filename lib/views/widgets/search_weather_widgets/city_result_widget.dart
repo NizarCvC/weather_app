@@ -4,7 +4,7 @@ import 'package:weather_app/models/geocoding_models/city_model.dart';
 import 'package:weather_app/utils/theme/app_colors.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 import 'package:weather_app/view_models/weather_cubit/weather_cubit.dart';
-import 'package:weather_app/views/widgets/city_weather_widget.dart';
+import 'package:weather_app/views/widgets/current_weather_widgets/current_city_weather_widget.dart';
 
 class CityResultWidget extends StatelessWidget {
   final CityModel cityModel;
@@ -38,7 +38,7 @@ class CityResultWidget extends StatelessWidget {
               child: Stack(
                 alignment: .topLeft,
                 children: [
-                  CityWeatherWidget(weatherInfo: state.weatherModel),
+                  CurrentCityWeatherWidget(weatherInfo: state.weatherModel),
                   Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: IconButton(
@@ -66,7 +66,7 @@ class CityResultWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(32),
                 clipBehavior: Clip.antiAlias,
               ),
-              child: const CityWeatherWidget.loading(),
+              child: const CurrentCityWeatherWidget.loading(),
             );
           }
         },

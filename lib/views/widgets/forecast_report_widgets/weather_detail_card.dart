@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/utils/theme/app_colors.dart';
 
-class WeatherCard extends StatelessWidget {
+class WeatherDetailCard extends StatelessWidget {
   final String iconPath;
   final String title;
   final String info;
-  
-  const WeatherCard({
+
+  const WeatherDetailCard({
     super.key,
     required this.iconPath,
     required this.title,

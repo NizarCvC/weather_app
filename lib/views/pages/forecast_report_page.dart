@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/models/weather_models/weather_model.dart';
 import 'package:weather_app/utils/app_assets.dart';
-import 'package:weather_app/views/widgets/hourly_daily_forecast_widget.dart';
-import 'package:weather_app/views/widgets/weather_card.dart';
-import 'package:weather_app/views/widgets/weather_day_widget.dart';
+import 'package:weather_app/views/widgets/forecast_report_widgets/weather_detail_card.dart';
+import 'package:weather_app/views/widgets/forecast_report_widgets/weather_day_widget.dart';
+import 'package:weather_app/views/widgets/shared_widgets/hourly_daily_forecast_widget.dart';
 
 class ForecastReportPage extends StatelessWidget {
   final WeatherModel weatherModel;
@@ -31,42 +31,42 @@ class ForecastReportPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     var weatherCards = [
-      WeatherCard(
+      WeatherDetailCard(
         iconPath: AppAssets.feelsLikeIcon,
         title: 'Feels Like',
         info: '${weatherModel.current!.feelsLike.round()}°',
       ),
-      WeatherCard(
+      WeatherDetailCard(
         iconPath: AppAssets.visionIcon,
         title: 'Vision',
         info: '${weatherModel.current!.visibility} Km',
       ),
-      WeatherCard(
+      WeatherDetailCard(
         iconPath: AppAssets.uvIcon,
         title: 'UV Index',
         info: '${weatherModel.current!.uvi}',
       ),
-      WeatherCard(
+      WeatherDetailCard(
         iconPath: AppAssets.windIcon,
         title: 'Wind Speed',
         info: '${weatherModel.current!.windSpeed}',
       ),
-      WeatherCard(
+      WeatherDetailCard(
         iconPath: AppAssets.humidityIcon,
         title: 'Humidity',
         info: '${weatherModel.current!.humidity}',
       ),
-      WeatherCard(
+      WeatherDetailCard(
         iconPath: AppAssets.pressureIcon,
         title: 'Pressure',
         info: '${weatherModel.current!.pressure}',
       ),
-      WeatherCard(
+      WeatherDetailCard(
         iconPath: AppAssets.cloudIcon,
         title: 'Cloudiness',
         info: '${weatherModel.current!.clouds}%',
       ),
-      WeatherCard(
+      WeatherDetailCard(
         iconPath: AppAssets.rainIcon,
         title: 'Rain',
         info: '${weatherModel.current!.rain?.oneHour ?? 0} mm',

@@ -7,3 +7,9 @@ linter:
     prefer_const_constructors: true
     prefer_const_literals_to_create_immutables: true
     prefer_const_declarations: true
+    require_trailing_commas: true
+    sort_child_properties_last: true
+    sized_box_for_whitespace: true
+    unawaited_futures: true
+    always_declare_return_types: true
+    avoid_dynamic_calls: true
