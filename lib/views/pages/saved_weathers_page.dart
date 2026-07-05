@@ -36,7 +36,13 @@ class SavedWeathersPage extends StatelessWidget {
         ),
         actions: [_buildEditingIconButton(context)],
       ),
-      body: BlocBuilder<WeatherCubit, WeatherState>(
+      body: BlocConsumer<WeatherCubit, WeatherState>(
+        listenWhen: (previous, current) => current is UnsavedCityName,
+        listener: (context, state) {
+          if (state is UnsavedCityName) {
+            cubit.fetchSavedCitiesWeather();
+          }
+        },
         buildWhen: (previous, current) =>
             current is FetchingSavedWeatherCities ||
             current is SavedWeatherCitiesFetched ||

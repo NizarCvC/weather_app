@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:weather_app/models/weather_models/weather_model.dart';
 import 'package:weather_app/utils/theme/app_colors.dart';
+import 'package:weather_app/view_models/weather_cubit/weather_cubit.dart';
 
 class WeatherItemWidget extends StatelessWidget {
   final WeatherModel cityWeather;
   final bool isDeleteActive;
+
   const WeatherItemWidget({
     super.key,
     required this.cityWeather,
@@ -34,7 +37,10 @@ class WeatherItemWidget extends StatelessWidget {
                   padding: const EdgeInsets.all(0),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  final cubit = BlocProvider.of<WeatherCubit>(context);
+                  cubit.unsaveCityNameFromLocalDatabase(cityWeather.cityName);
+                },
                 icon: const Icon(Icons.delete_outline_outlined),
               ),
             ],
