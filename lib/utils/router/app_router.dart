@@ -38,7 +38,16 @@ class AppRouter {
           },
         );
       case AppRoutes.savedWeathers:
-        return MaterialPageRoute(builder: (_) => SavedWeathersPage());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) {
+              final cubit = WeatherCubit();
+              cubit.fetchSavedCitiesWeather();
+              return cubit;
+            },
+            child: SavedWeathersPage(),
+          ),
+        );
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

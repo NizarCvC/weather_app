@@ -11,12 +11,41 @@ class CurrentWeatherPage extends StatelessWidget {
 
   static const _iconList = [Icons.location_on_outlined, Icons.list];
 
+  Widget _buildAnimatedBottomNavigationBar(
+    BuildContext context,
+    Function(int) onTap,
+  ) {
+    final size = MediaQuery.of(context).size;
+    return AnimatedBottomNavigationBar(
+      iconSize: size.height * 0.035,
+      icons: _iconList,
+      backgroundColor: AppColors.bottomNavigationColor,
+      activeColor: AppColors.white,
+      inactiveColor: AppColors.white,
+      activeIndex: 0,
+      gapLocation: GapLocation.center,
+      notchSmoothness: NotchSmoothness.softEdge,
+      onTap: onTap,
+    );
+  }
+
+  Widget _buildFloatingActionButton(
+    BuildContext context,
+    VoidCallback onPressed,
+  ) {
+    final size = MediaQuery.of(context).size;
+    return FloatingActionButton(
+      onPressed: onPressed,
+      backgroundColor: AppColors.white,
+      foregroundColor: AppColors.themeColor,
+      shape: CircleBorder(),
+      child: Icon(size: size.height * 0.04, Icons.add),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final cubit = BlocProvider.of<WeatherCubit>(context);
     return BlocBuilder<WeatherCubit, WeatherState>(
-      bloc: cubit,
       buildWhen: (previous, current) =>
           current is FetchingWeatherInfo ||
           current is WeatherInfoFetched ||
@@ -27,65 +56,38 @@ class CurrentWeatherPage extends StatelessWidget {
           return Scaffold(
             extendBody: true,
             body: CityWeatherWidget(weatherInfo: weatherInfo),
-            floatingActionButton: FloatingActionButton(
-              backgroundColor: AppColors.white,
-              foregroundColor: AppColors.themeColor,
-              shape: CircleBorder(),
-              child: Icon(size: size.height * 0.04, Icons.add),
-              onPressed: () =>
-                  Navigator.of(context).pushNamed(AppRoutes.searchWeather),
+            floatingActionButton: _buildFloatingActionButton(
+              context,
+              () => Navigator.of(context).pushNamed(AppRoutes.searchWeather),
             ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
-            bottomNavigationBar: AnimatedBottomNavigationBar(
-              iconSize: size.height * 0.035,
-              icons: _iconList,
-              backgroundColor: AppColors.bottomNavigationColor,
-              activeColor: AppColors.white,
-              inactiveColor: AppColors.white,
-              activeIndex: 0,
-              gapLocation: GapLocation.center,
-              notchSmoothness: NotchSmoothness.softEdge,
-              onTap: (index) {
-                switch (index) {
-                  case 0:
-                    Navigator.of(context).pushNamed(
-                      AppRoutes.forecastReportWeather,
-                      arguments: weatherInfo,
-                    );
-                    break;
-                  case 1:
-                    Navigator.of(context).pushNamed(AppRoutes.savedWeathers);
-                    break;
-                }
-              },
-            ),
+            bottomNavigationBar: _buildAnimatedBottomNavigationBar(context, (
+              index,
+            ) {
+              switch (index) {
+                case 0:
+                  Navigator.of(context).pushNamed(
+                    AppRoutes.forecastReportWeather,
+                    arguments: weatherInfo,
+                  );
+                  break;
+                case 1:
+                  Navigator.of(context).pushNamed(AppRoutes.savedWeathers);
+                  break;
+              }
+            }),
           );
         } else {
           return Scaffold(
             extendBody: true,
             body: CityWeatherWidget.loading(),
-            floatingActionButton: FloatingActionButton(
-              backgroundColor: AppColors.white,
-              foregroundColor: AppColors.themeColor,
-              shape: CircleBorder(),
-              child: Icon(size: size.height * 0.04, Icons.add),
-              onPressed: () {},
-            ),
+            floatingActionButton: _buildFloatingActionButton(context, () {}),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked,
-            bottomNavigationBar: AnimatedBottomNavigationBar(
-              iconSize: size.height * 0.035,
-              icons: _iconList,
-              backgroundColor: AppColors.bottomNavigationColor,
-              activeColor: AppColors.white,
-              inactiveColor: AppColors.white,
-              activeIndex: 0,
-              gapLocation: GapLocation.center,
-              notchSmoothness: NotchSmoothness.softEdge,
-              onTap: (index) {
-                switch (index) {}
-              },
+            bottomNavigationBar: _buildAnimatedBottomNavigationBar(
+              context,
+              (index) {},
             ),
           );
         }

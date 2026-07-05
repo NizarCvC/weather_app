@@ -30,6 +30,48 @@ class ForecastReportPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    var weatherCards = [
+      WeatherCard(
+        iconPath: AppAssets.feelsLikeIcon,
+        title: 'Feels Like',
+        info: '${weatherModel.current!.feelsLike.round()}°',
+      ),
+      WeatherCard(
+        iconPath: AppAssets.visionIcon,
+        title: 'Vision',
+        info: '${weatherModel.current!.visibility} Km',
+      ),
+      WeatherCard(
+        iconPath: AppAssets.uvIcon,
+        title: 'UV Index',
+        info: '${weatherModel.current!.uvi}',
+      ),
+      WeatherCard(
+        iconPath: AppAssets.windIcon,
+        title: 'Wind Speed',
+        info: '${weatherModel.current!.windSpeed}',
+      ),
+      WeatherCard(
+        iconPath: AppAssets.humidityIcon,
+        title: 'Humidity',
+        info: '${weatherModel.current!.humidity}',
+      ),
+      WeatherCard(
+        iconPath: AppAssets.pressureIcon,
+        title: 'Pressure',
+        info: '${weatherModel.current!.pressure}',
+      ),
+      WeatherCard(
+        iconPath: AppAssets.cloudIcon,
+        title: 'Cloudiness',
+        info: '${weatherModel.current!.clouds}%',
+      ),
+      WeatherCard(
+        iconPath: AppAssets.rainIcon,
+        title: 'Rain',
+        info: '${weatherModel.current!.rain?.oneHour ?? 0} mm',
+      ),
+    ];
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0,
@@ -73,48 +115,7 @@ class ForecastReportPage extends StatelessWidget {
                   crossAxisSpacing: size.width * 0.06,
                   mainAxisExtent: size.height * 0.16,
                 ),
-                children: [
-                  WeatherCard(
-                    iconPath: AppAssets.feelsLikeIcon,
-                    title: 'Feels Like',
-                    info: '${weatherModel.current!.feelsLike.round()}°',
-                  ),
-                  WeatherCard(
-                    iconPath: AppAssets.visionIcon,
-                    title: 'Vision',
-                    info: '${weatherModel.current!.visibility} Km',
-                  ),
-                  WeatherCard(
-                    iconPath: AppAssets.uvIcon,
-                    title: 'UV Index',
-                    info: '${weatherModel.current!.uvi}',
-                  ),
-                  WeatherCard(
-                    iconPath: AppAssets.windIcon,
-                    title: 'Wind Speed',
-                    info: '${weatherModel.current!.windSpeed}',
-                  ),
-                  WeatherCard(
-                    iconPath: AppAssets.humidityIcon,
-                    title: 'Humidity',
-                    info: '${weatherModel.current!.humidity}',
-                  ),
-                  WeatherCard(
-                    iconPath: AppAssets.pressureIcon,
-                    title: 'Pressure',
-                    info: '${weatherModel.current!.pressure}',
-                  ),
-                  WeatherCard(
-                    iconPath: AppAssets.cloudIcon,
-                    title: 'Cloudiness',
-                    info: '${weatherModel.current!.clouds}%',
-                  ),
-                  WeatherCard(
-                    iconPath: AppAssets.rainIcon,
-                    title: 'Rain',
-                    info: '${weatherModel.current!.rain?.oneHour ?? 0} mm',
-                  ),
-                ],
+                children: weatherCards,
               ),
             ],
           ),

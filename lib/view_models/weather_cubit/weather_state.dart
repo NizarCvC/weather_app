@@ -61,3 +61,7 @@ final class FetchingSavedWeatherCitiesFailed extends WeatherState {
 
   FetchingSavedWeatherCitiesFailed(this.errorMessage);
 }
+
+final class ActiveDeletingSavedWeathers extends WeatherState {}
+
+final class UnActiveDeletingSavedWeathers extends WeatherState {}

@@ -5,6 +5,7 @@ class WeatherCard extends StatelessWidget {
   final String iconPath;
   final String title;
   final String info;
+  
   const WeatherCard({
     super.key,
     required this.iconPath,

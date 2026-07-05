@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weather_app/utils/app_assets.dart';
 import 'package:weather_app/utils/theme/app_colors.dart';
 import 'package:weather_app/view_models/weather_cubit/weather_cubit.dart';
 import 'package:weather_app/views/widgets/city_result_widget.dart';
+import 'package:weather_app/views/widgets/empty_widget.dart';
 
 class SearchWeatherPage extends StatefulWidget {
   const SearchWeatherPage({super.key});
@@ -27,10 +27,46 @@ class _SearchWeatherPageState extends State<SearchWeatherPage> {
     super.dispose();
   }
 
+  Widget _buildSearchingText(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final cubit = BlocProvider.of<WeatherCubit>(context);
+    return Container(
+      height: size.height * 0.06,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(32.0),
+        gradient: LinearGradient(colors: AppColors.nightColors),
+      ),
+      child: Center(
+        child: TextField(
+          textInputAction: .search,
+          style: TextStyle(),
+          controller: _searchController,
+          decoration: InputDecoration(
+            suffixIcon: Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Icon(
+                size: size.height * 0.035,
+                Icons.search,
+                color: Colors.grey[600],
+              ),
+            ),
+            hintText: 'Search',
+            border: OutlineInputBorder(borderSide: .none),
+          ),
+          onSubmitted: (text) {
+            if (_searchController.text.isNotEmpty) {
+              cubit.searchingWeather(text);
+            }
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final cubit = BlocProvider.of<WeatherCubit>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -42,87 +78,34 @@ class _SearchWeatherPageState extends State<SearchWeatherPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Row(
-              children: [
-                Container(
-                  height: size.height * 0.06,
-                  width: size.width * 0.78,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(32.0),
-                    gradient: LinearGradient(colors: AppColors.nightColors),
-                  ),
-                  child: Center(
-                    child: TextField(
-                      style: TextStyle(),
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        suffixIcon: Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: Icon(
-                            size: size.height * 0.035,
-                            Icons.search,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        hintText: 'Search',
-                        border: OutlineInputBorder(borderSide: .none),
-                      ),
-                    ),
-                  ),
-                ),
-                Spacer(),
-                IconButton(
-                  onPressed: () async {
-                    if (_searchController.text.isNotEmpty) {
-                      await cubit.searchingWeather(_searchController.text);
-                    }
-                  },
-                  iconSize: size.height * 0.04,
-                  style: IconButton.styleFrom(
-                    backgroundColor: AppColors.nightColorLight,
-                  ),
-                  icon: Icon(Icons.location_on_outlined),
-                ),
-              ],
-            ),
+            _buildSearchingText(context),
             SizedBox(height: size.height * 0.04),
-            BlocBuilder(
-              bloc: cubit,
-              buildWhen: (previous, current) =>
-                  current is SearchingWeatherName ||
-                  current is SearchedWeatherName ||
-                  current is SearchingWeatherNameFailed,
-              builder: (context, state) {
-                if (state is SearchingWeatherName) {
-                  return const CircularProgressIndicator.adaptive();
-                } else if (state is SearchedWeatherName) {
-                  final citiesList = state.cityModels;
-                  if (citiesList.isEmpty) {
-                    return Center(
-                      child: Image.asset(
-                        height: size.height * 0.35,
-                        AppAssets.empty,
-                      ),
-                    );
-                  }
-                  return Expanded(
-                    child: ListView.builder(
+            Expanded(
+              child: BlocBuilder<WeatherCubit, WeatherState>(
+                buildWhen: (previous, current) =>
+                    current is SearchingWeatherName ||
+                    current is SearchedWeatherName ||
+                    current is SearchingWeatherNameFailed,
+                builder: (context, state) {
+                  if (state is SearchingWeatherName) {
+                    return const CircularProgressIndicator.adaptive();
+                  } else if (state is SearchedWeatherName) {
+                    final citiesList = state.cityModels;
+                    if (citiesList.isEmpty) {
+                      return EmptyWidget();
+                    }
+                    return ListView.builder(
                       itemCount: citiesList.length,
                       itemBuilder: (context, index) =>
                           CityResultWidget(cityModel: citiesList[index]),
-                    ),
-                  );
-                } else if (state is SearchingWeatherNameFailed) {
-                  return Center(
-                    child: Image.asset(
-                      height: size.height * 0.35,
-                      AppAssets.empty,
-                    ),
-                  );
-                } else {
-                  return SizedBox.shrink();
-                }
-              },
+                    );
+                  } else if (state is SearchingWeatherNameFailed) {
+                    return EmptyWidget();
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                },
+              ),
             ),
           ],
         ),

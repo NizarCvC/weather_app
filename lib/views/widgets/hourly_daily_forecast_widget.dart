@@ -7,6 +7,7 @@ import 'package:weather_app/utils/helpers/date_time_helper.dart';
 class HourlyDailyForecastWidget extends StatelessWidget {
   final List<HourlyWeather>? hourlyList;
   final List<DailyWeather>? dailyList;
+
   const HourlyDailyForecastWidget.hourly({
     super.key,
     required List<HourlyWeather> this.hourlyList,

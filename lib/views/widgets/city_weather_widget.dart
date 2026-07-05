@@ -32,6 +32,12 @@ class _CityWeatherWidgetState extends State<CityWeatherWidget>
   }
 
   @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Center(
@@ -40,19 +46,27 @@ class _CityWeatherWidgetState extends State<CityWeatherWidget>
         children: [
           WeatherBg(
             weatherType:
-                widget.weatherInfo?.current?.weatherScreen ?? WeatherType.sunny,
+                widget.weatherInfo?.current?.weatherScreen ??
+                WeatherType.sunnyNight,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
           ),
           Column(
             mainAxisAlignment: .start,
+            crossAxisAlignment: .center,
             children: [
               SizedBox(height: size.height * 0.1),
-              Text(
-                widget.isLoading
-                    ? '--'
-                    : widget.weatherInfo?.cityName ?? 'Unknown',
-                style: Theme.of(context).textTheme.displayMedium,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  widget.isLoading
+                      ? '--'
+                      : widget.weatherInfo?.cityName ?? 'Unknown',
+                  style: Theme.of(context).textTheme.displayMedium,
+                  textAlign: .center,
+                  maxLines: 1,
+                  overflow: .ellipsis,
+                ),
               ),
               SizedBox(height: size.height * 0.02),
               Text(
