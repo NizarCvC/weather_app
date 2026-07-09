@@ -5,6 +5,7 @@ import 'package:weather_app/utils/router/app_routes.dart';
 import 'package:weather_app/utils/theme/app_theme.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const WeatherApp());
 }
 
