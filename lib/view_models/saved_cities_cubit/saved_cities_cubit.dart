@@ -11,8 +11,6 @@ class SavedCitiesCubit extends Cubit<SavedCitiesState> {
 
   final _localDatabaseServices = LocalDatabaseServicesImpl();
   final _weatherServices = WeatherServicesImpl();
-  bool _isDeletingSavedWeathersActive = false;
-  bool get isDeletingActive => _isDeletingSavedWeathersActive;
   List<WeatherModel> _savedCitiesWeather = [];
   List<WeatherModel> get savedCitiesWeather => _savedCitiesWeather;
 
@@ -101,16 +99,6 @@ class SavedCitiesCubit extends Cubit<SavedCitiesState> {
       emit(SavedWeatherCitiesFetched());
     } catch (e) {
       emit(FetchingSavedWeatherCitiesFailed(e.toString()));
-    }
-  }
-
-  void toggleActiveDeletingWeathers() {
-    _isDeletingSavedWeathersActive = !_isDeletingSavedWeathersActive;
-
-    if (_isDeletingSavedWeathersActive) {
-      emit(ActiveDeletingSavedWeathers());
-    } else {
-      emit(DeactivatedDeletingSavedWeathers());
     }
   }
 }

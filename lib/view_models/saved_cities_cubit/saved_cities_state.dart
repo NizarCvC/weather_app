@@ -29,7 +29,3 @@ final class FetchingSavedWeatherCitiesFailed extends SavedCitiesState {
 
   FetchingSavedWeatherCitiesFailed(this.errorMessage);
 }
-
-final class ActiveDeletingSavedWeathers extends SavedCitiesState {}
-
-final class DeactivatedDeletingSavedWeathers extends SavedCitiesState {}

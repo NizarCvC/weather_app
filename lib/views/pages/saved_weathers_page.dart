@@ -1,29 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/view_models/saved_cities_cubit/saved_cities_cubit.dart';
-import 'package:weather_app/view_models/weather_cubit/weather_cubit.dart';
 import 'package:weather_app/views/widgets/shared_widgets/custom_error_widget.dart';
 import 'package:weather_app/views/widgets/shared_widgets/empty_widget.dart';
 import 'package:weather_app/views/widgets/saved_weather_widgets/weather_item_widget.dart';
 
 class SavedWeathersPage extends StatelessWidget {
   const SavedWeathersPage({super.key});
-
-  Widget _buildEditingIconButton(BuildContext context) {
-    final cubit = BlocProvider.of<SavedCitiesCubit>(context);
-    return BlocBuilder<SavedCitiesCubit, SavedCitiesState>(
-      bloc: cubit,
-      buildWhen: (previous, current) =>
-          current is ActiveDeletingSavedWeathers ||
-          current is DeactivatedDeletingSavedWeathers,
-      builder: (context, state) {
-        return IconButton(
-          onPressed: () => cubit.toggleActiveDeletingWeathers(),
-          icon: Icon(cubit.isDeletingActive ? Icons.close : Icons.edit),
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +19,6 @@ class SavedWeathersPage extends StatelessWidget {
           'Saved weathers',
           style: Theme.of(context).textTheme.headlineMedium,
         ),
-        actions: [_buildEditingIconButton(context)],
       ),
       body: BlocConsumer<SavedCitiesCubit, SavedCitiesState>(
         bloc: cubit,
@@ -49,15 +31,11 @@ class SavedWeathersPage extends StatelessWidget {
         buildWhen: (previous, current) =>
             current is FetchingSavedWeatherCities ||
             current is SavedWeatherCitiesFetched ||
-            current is FetchingSavedWeatherCitiesFailed ||
-            current is ActiveDeletingSavedWeathers ||
-            current is DeactivatedDeletingSavedWeathers,
+            current is FetchingSavedWeatherCitiesFailed,
         builder: (context, state) {
           if (state is FetchingSavedWeatherCities) {
             return const Center(child: CircularProgressIndicator.adaptive());
-          } else if (state is SavedWeatherCitiesFetched ||
-              state is ActiveDeletingSavedWeathers ||
-              state is DeactivatedDeletingSavedWeathers) {
+          } else if (state is SavedWeatherCitiesFetched) {
             final savedCities = cubit.savedCitiesWeather;
             if (savedCities.isEmpty) {
               return const EmptyWidget();
@@ -72,10 +50,8 @@ class SavedWeathersPage extends StatelessWidget {
                   crossAxisSpacing: size.width * 0.06,
                   mainAxisExtent: size.height * 0.17,
                 ),
-                itemBuilder: (context, index) => WeatherItemWidget(
-                  cityWeather: savedCities[index],
-                  isDeleteActive: cubit.isDeletingActive,
-                ),
+                itemBuilder: (context, index) =>
+                    WeatherItemWidget(cityWeather: savedCities[index]),
               ),
             );
           } else if (state is FetchingSavedWeatherCitiesFailed) {

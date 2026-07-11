@@ -14,8 +14,8 @@ class WeatherBottomSheetWidget extends StatelessWidget {
     VoidCallback onPressed,
   ) {
     final size = MediaQuery.of(context).size;
-    final cubit = BlocProvider.of<WeatherCubit>(context);
-    return BlocBuilder<WeatherCubit, WeatherState>(
+    final cubit = BlocProvider.of<SavedCitiesCubit>(context);
+    return BlocBuilder<SavedCitiesCubit, SavedCitiesState>(
       bloc: cubit,
       buildWhen: (previous, current) => current is SavedCityName,
       builder: (context, state) {
