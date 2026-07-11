@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/models/weather_models/weather_model.dart';
 import 'package:weather_app/utils/router/app_routes.dart';
+import 'package:weather_app/view_models/saved_cities_cubit/saved_cities_cubit.dart';
+import 'package:weather_app/view_models/search_cubit/search_cubit.dart';
 import 'package:weather_app/view_models/weather_cubit/weather_cubit.dart';
 import 'package:weather_app/views/pages/current_weather_page.dart';
 import 'package:weather_app/views/pages/forecast_report_page.dart';
@@ -25,7 +27,7 @@ class AppRouter {
       case AppRoutes.searchWeather:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            create: (context) => WeatherCubit(),
+            create: (context) => SearchCubit(),
             child: const SearchWeatherPage(),
           ),
         );
@@ -41,7 +43,7 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
             create: (context) {
-              final cubit = WeatherCubit();
+              final cubit = SavedCitiesCubit();
               cubit.fetchSavedCitiesWeather();
               return cubit;
             },

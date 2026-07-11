@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/view_models/saved_cities_cubit/saved_cities_cubit.dart';
 import 'package:weather_app/view_models/weather_cubit/weather_cubit.dart';
 import 'package:weather_app/views/widgets/shared_widgets/custom_error_widget.dart';
 import 'package:weather_app/views/widgets/shared_widgets/empty_widget.dart';
@@ -9,8 +10,9 @@ class SavedWeathersPage extends StatelessWidget {
   const SavedWeathersPage({super.key});
 
   Widget _buildEditingIconButton(BuildContext context) {
-    final cubit = BlocProvider.of<WeatherCubit>(context);
-    return BlocBuilder<WeatherCubit, WeatherState>(
+    final cubit = BlocProvider.of<SavedCitiesCubit>(context);
+    return BlocBuilder<SavedCitiesCubit, SavedCitiesState>(
+      bloc: cubit,
       buildWhen: (previous, current) =>
           current is ActiveDeletingSavedWeathers ||
           current is DeactivatedDeletingSavedWeathers,
@@ -26,7 +28,7 @@ class SavedWeathersPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final cubit = BlocProvider.of<WeatherCubit>(context);
+    final cubit = BlocProvider.of<SavedCitiesCubit>(context);
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0,
@@ -36,7 +38,8 @@ class SavedWeathersPage extends StatelessWidget {
         ),
         actions: [_buildEditingIconButton(context)],
       ),
-      body: BlocConsumer<WeatherCubit, WeatherState>(
+      body: BlocConsumer<SavedCitiesCubit, SavedCitiesState>(
+        bloc: cubit,
         listenWhen: (previous, current) => current is UnsavedCityName,
         listener: (context, state) {
           if (state is UnsavedCityName) {

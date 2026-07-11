@@ -110,7 +110,7 @@ class _CurrentCityWeatherWidgetState extends State<CurrentCityWeatherWidget>
               SizedBox(height: size.height * 0.035),
               SvgPicture.asset(
                 widget.weatherInfo?.current?.weather.first.icon ??
-                    'assets/weather/Weather Icon.svg',
+                    'assets/weather/Weather Icon-1.svg',
                 height: size.height * 0.18,
               ),
               SizedBox(height: size.height * 0.12),

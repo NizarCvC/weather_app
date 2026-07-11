@@ -47,6 +47,7 @@ class CurrentWeatherPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final cubit = BlocProvider.of<WeatherCubit>(context);
     return BlocBuilder<WeatherCubit, WeatherState>(
+      bloc: cubit,
       buildWhen: (previous, current) =>
           current is FetchingWeatherInfo ||
           current is WeatherInfoFetched ||

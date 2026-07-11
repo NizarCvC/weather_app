@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/utils/theme/app_colors.dart';
-import 'package:weather_app/view_models/weather_cubit/weather_cubit.dart';
+import 'package:weather_app/view_models/search_cubit/search_cubit.dart';
 import 'package:weather_app/views/widgets/search_weather_widgets/city_result_widget.dart';
 import 'package:weather_app/views/widgets/shared_widgets/empty_widget.dart';
 
@@ -29,7 +29,7 @@ class _SearchWeatherPageState extends State<SearchWeatherPage> {
 
   Widget _buildSearchingText(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final cubit = BlocProvider.of<WeatherCubit>(context);
+    final cubit = BlocProvider.of<SearchCubit>(context);
     return Container(
       height: size.height * 0.06,
       width: double.infinity,
@@ -67,6 +67,7 @@ class _SearchWeatherPageState extends State<SearchWeatherPage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final cubit = BlocProvider.of<SearchCubit>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -81,7 +82,8 @@ class _SearchWeatherPageState extends State<SearchWeatherPage> {
             _buildSearchingText(context),
             SizedBox(height: size.height * 0.04),
             Expanded(
-              child: BlocBuilder<WeatherCubit, WeatherState>(
+              child: BlocBuilder<SearchCubit, SearchState>(
+                bloc: cubit,
                 buildWhen: (previous, current) =>
                     current is SearchingWeatherName ||
                     current is SearchedWeatherName ||
