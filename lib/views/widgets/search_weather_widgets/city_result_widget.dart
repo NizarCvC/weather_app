@@ -13,7 +13,7 @@ class CityResultWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return SizedBox(
-      height: size.height * 0.08,
+      height: size.height * 0.1,
       width: double.infinity,
       child: InkWell(
         onTap: () {
@@ -31,13 +31,26 @@ class CityResultWidget extends StatelessWidget {
           child: Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Text(
-                '${cityModel.name}, ${cityModel.state}',
-                style: Theme.of(context).textTheme.titleMedium,
-                maxLines: 1, 
-                overflow:
-                    TextOverflow.ellipsis,
+              padding: const EdgeInsets.only(left: 12.0),
+              child: Column(
+                mainAxisAlignment: .center,
+                crossAxisAlignment: .start,
+                children: [
+                  Text(
+                    cityModel.name,
+                    style: Theme.of(context).textTheme.headlineSmall,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  if (cityModel.state != null) ...[
+                    Text(
+                      cityModel.state!,
+                      style: Theme.of(context).textTheme.titleMedium,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ],
               ),
             ),
           ),

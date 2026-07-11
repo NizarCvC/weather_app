@@ -45,6 +45,7 @@ class CurrentWeatherPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cubit = BlocProvider.of<WeatherCubit>(context);
     return BlocBuilder<WeatherCubit, WeatherState>(
       buildWhen: (previous, current) =>
           current is FetchingWeatherInfo ||
@@ -73,7 +74,15 @@ class CurrentWeatherPage extends StatelessWidget {
                   );
                   break;
                 case 1:
-                  Navigator.of(context).pushNamed(AppRoutes.savedWeathers);
+                  {
+                    Navigator.of(
+                      context,
+                    ).pushNamed(AppRoutes.savedWeathers).then((onValue) {
+                      if (onValue != null) {
+                        cubit.fetchWeatherInfo(onValue.toString());
+                      }
+                    });
+                  }
                   break;
               }
             }),

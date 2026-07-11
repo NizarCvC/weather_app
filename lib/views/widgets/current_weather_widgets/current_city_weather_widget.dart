@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:adv_flutter_weather/bg/weather_bg.dart';
 import 'package:adv_flutter_weather/utils/weather_type.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +40,42 @@ class _CurrentCityWeatherWidgetState extends State<CurrentCityWeatherWidget>
     super.dispose();
   }
 
+  Widget _buildTextWithGlassBackground(String text) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(25.0),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(25.0),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.2),
+              width: 1.5,
+            ),
+          ),
+          child: Text(
+            text,
+            style: Theme.of(context).textTheme.displayMedium?.copyWith(
+              color: Colors.white,
+              shadows: [
+                Shadow(
+                  color: Colors.black.withValues(alpha: 0.3),
+                  offset: const Offset(0, 1),
+                  blurRadius: 2,
+                ),
+              ],
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -59,20 +97,15 @@ class _CurrentCityWeatherWidgetState extends State<CurrentCityWeatherWidget>
               SizedBox(height: size.height * 0.1),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Text(
+                child: _buildTextWithGlassBackground(
                   widget.isLoading
                       ? '--'
                       : widget.weatherInfo?.cityName ?? 'Unknown',
-                  style: Theme.of(context).textTheme.displayMedium,
-                  textAlign: .center,
-                  maxLines: 1,
-                  overflow: .ellipsis,
                 ),
               ),
               SizedBox(height: size.height * 0.02),
-              Text(
+              _buildTextWithGlassBackground(
                 "${(widget.isLoading) ? '--' : widget.weatherInfo?.current?.temp.round() ?? 'Unknown'}°",
-                style: Theme.of(context).textTheme.displayMedium,
               ),
               SizedBox(height: size.height * 0.035),
               SvgPicture.asset(
@@ -80,7 +113,7 @@ class _CurrentCityWeatherWidgetState extends State<CurrentCityWeatherWidget>
                     'assets/weather/Weather Icon.svg',
                 height: size.height * 0.18,
               ),
-              SizedBox(height: size.height * 0.16),
+              SizedBox(height: size.height * 0.12),
               Container(
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.only(

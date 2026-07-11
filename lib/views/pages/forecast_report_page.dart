@@ -12,7 +12,7 @@ class ForecastReportPage extends StatelessWidget {
   Widget _buildTitle({required BuildContext context, required String title}) {
     final size = MediaQuery.of(context).size;
     return Align(
-      alignment: .centerLeft,
+      alignment: Alignment.centerLeft,
       child: Row(
         children: [
           SizedBox(width: size.width * 0.05),
@@ -20,58 +20,71 @@ class ForecastReportPage extends StatelessWidget {
             title,
             style: Theme.of(
               context,
-            ).textTheme.headlineLarge!.copyWith(fontWeight: .w600),
+            ).textTheme.headlineLarge!.copyWith(fontWeight: FontWeight.w600),
           ),
         ],
       ),
     );
   }
 
+  String _getUvDescription(double uv) {
+    double uvValue = uv;
+    if (uvValue <= 2) return 'Low';
+    if (uvValue <= 5) return 'Moderate';
+    if (uvValue <= 7) return 'High';
+    if (uvValue <= 10) return 'Very High';
+    return 'Extreme';
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final current = weatherModel.current!;
+    final windSpeedKmh = (current.windSpeed * 3.6).round(); 
+    final visibilityKm = (current.visibility / 1000).toStringAsFixed(1);
     var weatherCards = [
       WeatherDetailCard(
         iconPath: AppAssets.feelsLikeIcon,
         title: 'Feels Like',
-        info: '${weatherModel.current!.feelsLike.round()}°',
+        info: '${current.feelsLike.round()}°',
       ),
       WeatherDetailCard(
         iconPath: AppAssets.visionIcon,
-        title: 'Vision',
-        info: '${weatherModel.current!.visibility} Km',
+        title: 'Visibility',
+        info: '$visibilityKm km',
       ),
       WeatherDetailCard(
         iconPath: AppAssets.uvIcon,
         title: 'UV Index',
-        info: '${weatherModel.current!.uvi}',
+        info: '${current.uvi.round()} ${_getUvDescription(current.uvi)}',
       ),
       WeatherDetailCard(
         iconPath: AppAssets.windIcon,
         title: 'Wind Speed',
-        info: '${weatherModel.current!.windSpeed}',
+        info: '$windSpeedKmh km/h',
       ),
       WeatherDetailCard(
         iconPath: AppAssets.humidityIcon,
         title: 'Humidity',
-        info: '${weatherModel.current!.humidity}',
+        info: '${current.humidity}%',
       ),
       WeatherDetailCard(
         iconPath: AppAssets.pressureIcon,
         title: 'Pressure',
-        info: '${weatherModel.current!.pressure}',
+        info: '${current.pressure} hPa',
       ),
       WeatherDetailCard(
         iconPath: AppAssets.cloudIcon,
         title: 'Cloudiness',
-        info: '${weatherModel.current!.clouds}%',
+        info: '${current.clouds}%',
       ),
       WeatherDetailCard(
         iconPath: AppAssets.rainIcon,
-        title: 'Rain',
-        info: '${weatherModel.current!.rain?.oneHour ?? 0} mm',
+        title: 'Rain (1h)',
+        info: '${current.rain?.oneHour?.toStringAsFixed(1) ?? "0"} mm',
       ),
     ];
+
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0,
