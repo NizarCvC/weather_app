@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:adv_flutter_weather/bg/weather_bg.dart';
 import 'package:adv_flutter_weather/utils/weather_type.dart';
 import 'package:flutter/material.dart';

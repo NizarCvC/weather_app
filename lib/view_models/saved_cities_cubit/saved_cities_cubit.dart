@@ -101,4 +101,13 @@ class SavedCitiesCubit extends Cubit<SavedCitiesState> {
       emit(FetchingSavedWeatherCitiesFailed(e.toString()));
     }
   }
+
+  Future<void> isCitySavedByName(String cityName) async {
+    List<String> citiesList = await _prepareSavedCitiesList();
+
+    final isAlreadySaved = citiesList.contains(cityName);
+    if (isAlreadySaved) {
+      emit(SavedCityName());
+    }
+  }
 }

@@ -41,6 +41,7 @@ class WeatherBottomSheetWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     const fullSize = SheetOffset(0.86);
     const minSize = SheetOffset(0.0);
+
     return MultiBlocProvider(
       providers: [
         BlocProvider<WeatherCubit>(
@@ -55,6 +56,8 @@ class WeatherBottomSheetWidget extends StatelessWidget {
       child: Builder(
         builder: (context) {
           final weatherCubit = BlocProvider.of<WeatherCubit>(context);
+          final savedCitiesCubit = BlocProvider.of<SavedCitiesCubit>(context);
+          savedCitiesCubit.isCitySavedByName(cityName);
           return BlocBuilder<WeatherCubit, WeatherState>(
             bloc: weatherCubit,
             buildWhen: (previous, current) =>
@@ -78,8 +81,6 @@ class WeatherBottomSheetWidget extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: _buildSaveWeatherIconButton(context, () {
-                          final savedCitiesCubit =
-                              BlocProvider.of<SavedCitiesCubit>(context);
                           savedCitiesCubit.saveCityNameToLocalDatabase(
                             state.weatherModel.cityName,
                           );
