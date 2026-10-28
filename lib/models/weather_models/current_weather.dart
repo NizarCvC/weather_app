@@ -21,7 +21,9 @@ class CurrentWeather {
   final RainData? rain;
   final SnowData? snow;
   final List<WeatherCondition> weather;
-  WeatherType get weatherScreen => _mapWeatherScreen(weather.first.icon);
+  final List<String> alerts;
+  WeatherType get weatherScreen =>
+      weather.isNotEmpty ? _mapWeatherScreen(weather.first.icon) : WeatherType.sunny;
 
   CurrentWeather({
     required this.dt,
@@ -41,29 +43,40 @@ class CurrentWeather {
     this.rain,
     this.snow,
     required this.weather,
+    this.alerts = const [],
   });
 
   factory CurrentWeather.fromJson(Map<String, dynamic> json) {
+    final Map<String, dynamic> data =
+        (json['data'] is List && (json['data'] as List).isNotEmpty)
+            ? (json['data'] as List).first as Map<String, dynamic>
+            : json;
+
     return CurrentWeather(
-      dt: json['dt'] ?? 0,
-      sunrise: json['sunrise'],
-      sunset: json['sunset'],
-      temp: (json['temp'] as num).toDouble(),
-      feelsLike: (json['feels_like'] as num).toDouble(),
-      pressure: json['pressure'] ?? 0,
-      humidity: json['humidity'] ?? 0,
-      dewPoint: (json['dew_point'] as num).toDouble(),
-      uvi: (json['uvi'] as num).toDouble(),
-      clouds: json['clouds'] ?? 0,
-      visibility: json['visibility'] ?? 0,
-      windSpeed: (json['wind_speed'] as num).toDouble(),
-      windDeg: json['wind_deg'] ?? 0,
-      windGust: (json['wind_gust'] as num?)?.toDouble(),
-      rain: json['rain'] != null ? RainData.fromJson(json['rain']) : null,
-      snow: json['snow'] != null ? SnowData.fromJson(json['snow']) : null,
+      dt: (data['dt'] as num?)?.toInt() ?? 0,
+      sunrise: (data['sunrise'] as num?)?.toInt(),
+      sunset: (data['sunset'] as num?)?.toInt(),
+      temp: (data['temp'] as num?)?.toDouble() ?? 0.0,
+      feelsLike: (data['feels_like'] as num?)?.toDouble() ?? 0.0,
+      pressure: (data['pressure'] as num?)?.toInt() ?? 0,
+      humidity: (data['humidity'] as num?)?.toInt() ?? 0,
+      dewPoint: (data['dew_point'] as num?)?.toDouble() ?? 0.0,
+      uvi: (data['uvi'] as num?)?.toDouble() ?? 0.0,
+      clouds: (data['clouds'] as num?)?.toInt() ?? 0,
+      visibility: (data['visibility'] as num?)?.toInt() ?? 0,
+      windSpeed: (data['wind_speed'] as num?)?.toDouble() ?? 0.0,
+      windDeg: (data['wind_deg'] as num?)?.toInt() ?? 0,
+      windGust: (data['wind_gust'] as num?)?.toDouble(),
+      rain: RainData.fromDynamic(data['rain']),
+      snow: SnowData.fromDynamic(data['snow']),
       weather:
-          (json['weather'] as List<dynamic>?)
-              ?.map((e) => WeatherCondition.fromJson(e))
+          (data['weather'] as List<dynamic>?)
+              ?.map((e) => WeatherCondition.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      alerts:
+          (data['alerts'] as List<dynamic>?)
+              ?.map((e) => e.toString())
               .toList() ??
           [],
     );
@@ -88,6 +101,7 @@ class CurrentWeather {
       'rain': rain?.toJson(),
       'snow': snow?.toJson(),
       'weather': weather.map((e) => e.toJson()).toList(),
+      'alerts': alerts,
     };
   }
 

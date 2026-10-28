@@ -26,6 +26,17 @@ class DailyTemp {
     );
   }
 
+  static DailyTemp fromDynamic(dynamic value) {
+    if (value is Map<String, dynamic>) {
+      return DailyTemp.fromJson(value);
+    }
+    if (value is num) {
+      final v = value.toDouble();
+      return DailyTemp(morn: v, day: v, eve: v, night: v, min: v, max: v);
+    }
+    return DailyTemp(morn: 0, day: 0, eve: 0, night: 0, min: 0, max: 0);
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'morn': morn,

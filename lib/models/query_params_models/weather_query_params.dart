@@ -1,24 +1,24 @@
 import 'dart:convert';
 
-enum WeatherOptions { current, minutely, hourly, daily, alerts }
-
 enum Units { standard, metric, imperial }
 
 class WeatherQueryParams {
   final double lat;
   final double lon;
   final String appid;
-  final List<WeatherOptions> exclude;
   final Units units;
   final String? lang;
+  final int? start;
+  final int? cnt;
 
   WeatherQueryParams({
     required this.lat,
     required this.lon,
     required this.appid,
-    this.exclude = const [],
     this.units = Units.metric,
     this.lang = 'en',
+    this.start,
+    this.cnt,
   });
 
   Map<String, dynamic> toMap() {
@@ -26,9 +26,10 @@ class WeatherQueryParams {
       'lat': lat,
       'lon': lon,
       'appid': appid,
-      'exclude': exclude.map((x) => x.name).join(','),
       'units': units.name,
-      'lang': lang,
+      if (lang != null) 'lang': lang,
+      if (start != null) 'start': start,
+      if (cnt != null) 'cnt': cnt,
     };
   }
 
@@ -37,16 +38,15 @@ class WeatherQueryParams {
       lat: (map['lat'] as num).toDouble(),
       lon: (map['lon'] as num).toDouble(),
       appid: map['appid'] as String,
-      exclude: map['exclude'] != null
-          ? (map['exclude'] as String)
-                .split(',')
-                .map(
-                  (e) => WeatherOptions.values.firstWhere((x) => x.name == e),
-                )
-                .toList()
-          : [],
-      units: Units.values.firstWhere((x) => x.name == map['units']),
-      lang: map['lang'] as String,
+      units: map['units'] != null
+          ? Units.values.firstWhere(
+              (x) => x.name == map['units'],
+              orElse: () => Units.metric,
+            )
+          : Units.metric,
+      lang: map['lang'] as String?,
+      start: (map['start'] as num?)?.toInt(),
+      cnt: (map['cnt'] as num?)?.toInt(),
     );
   }
 

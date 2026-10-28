@@ -9,6 +9,17 @@ class SnowData {
     );
   }
 
+  static SnowData? fromDynamic(dynamic value) {
+    if (value == null) return null;
+    if (value is Map<String, dynamic>) {
+      return SnowData.fromJson(value);
+    }
+    if (value is num) {
+      return SnowData(oneHour: value.toDouble());
+    }
+    return null;
+  }
+
   Map<String, dynamic> toJson() {
     return {
       '1h': oneHour,

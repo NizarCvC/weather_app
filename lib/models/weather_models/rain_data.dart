@@ -9,6 +9,17 @@ class RainData {
     );
   }
 
+  static RainData? fromDynamic(dynamic value) {
+    if (value == null) return null;
+    if (value is Map<String, dynamic>) {
+      return RainData.fromJson(value);
+    }
+    if (value is num) {
+      return RainData(oneHour: value.toDouble());
+    }
+    return null;
+  }
+
   Map<String, dynamic> toJson() {
     return {
       '1h': oneHour,

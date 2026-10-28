@@ -20,6 +20,18 @@ class DailyFeelsLike {
     );
   }
 
+  static DailyFeelsLike? fromDynamic(dynamic value) {
+    if (value == null) return null;
+    if (value is Map<String, dynamic>) {
+      return DailyFeelsLike.fromJson(value);
+    }
+    if (value is num) {
+      final v = value.toDouble();
+      return DailyFeelsLike(morn: v, day: v, eve: v, night: v);
+    }
+    return null;
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'morn': morn,

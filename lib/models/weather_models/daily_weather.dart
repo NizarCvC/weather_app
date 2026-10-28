@@ -1,5 +1,7 @@
 import 'package:weather_app/models/weather_models/daily_feels_like.dart';
 import 'package:weather_app/models/weather_models/daily_temp.dart';
+import 'package:weather_app/models/weather_models/rain_data.dart';
+import 'package:weather_app/models/weather_models/snow_data.dart';
 import 'package:weather_app/models/weather_models/weather_condition.dart';
 
 class DailyWeather {
@@ -20,10 +22,12 @@ class DailyWeather {
   final int windDeg;
   final int clouds;
   final double uvi;
+  final int? visibility;
   final double pop;
-  final double? rain;
-  final double? snow;
+  final RainData? rain;
+  final SnowData? snow;
   final List<WeatherCondition> weather;
+  final List<String> alerts;
 
   DailyWeather({
     required this.dt,
@@ -43,41 +47,56 @@ class DailyWeather {
     required this.windDeg,
     required this.clouds,
     required this.uvi,
+    this.visibility,
     required this.pop,
     this.rain,
     this.snow,
     required this.weather,
+    this.alerts = const [],
   });
 
   factory DailyWeather.fromJson(Map<String, dynamic> json) {
     return DailyWeather(
-      dt: json['dt'] ?? 0,
-      sunrise: json['sunrise'],
-      sunset: json['sunset'],
-      moonrise: json['moonrise'],
-      moonset: json['moonset'],
+      dt: (json['dt'] as num?)?.toInt() ?? 0,
+      sunrise: (json['sunrise'] as num?)?.toInt(),
+      sunset: (json['sunset'] as num?)?.toInt(),
+      moonrise: (json['moonrise'] as num?)?.toInt(),
+      moonset: (json['moonset'] as num?)?.toInt(),
       moonPhase: (json['moon_phase'] as num?)?.toDouble() ?? 0.0,
-      summary: json['summary'],
-      temp: DailyTemp.fromJson(json['temp']),
-      feelsLike: json['feels_like'] != null
-          ? DailyFeelsLike.fromJson(json['feels_like'])
-          : null,
-      pressure: json['pressure'] ?? 0,
-      humidity: json['humidity'] ?? 0,
-      dewPoint: (json['dew_point'] as num).toDouble(),
-      windSpeed: (json['wind_speed'] as num).toDouble(),
+      summary: json['summary'] as String?,
+      temp: DailyTemp.fromDynamic(json['temp']),
+      feelsLike: DailyFeelsLike.fromDynamic(json['feels_like']),
+      pressure: (json['pressure'] as num?)?.toInt() ?? 0,
+      humidity: (json['humidity'] as num?)?.toInt() ?? 0,
+      dewPoint: (json['dew_point'] as num?)?.toDouble() ?? 0.0,
+      windSpeed: (json['wind_speed'] as num?)?.toDouble() ?? 0.0,
       windGust: (json['wind_gust'] as num?)?.toDouble(),
-      windDeg: json['wind_deg'] ?? 0,
-      clouds: json['clouds'] ?? 0,
+      windDeg: (json['wind_deg'] as num?)?.toInt() ?? 0,
+      clouds: (json['clouds'] as num?)?.toInt() ?? 0,
       uvi: (json['uvi'] as num?)?.toDouble() ?? 0.0,
+      visibility: (json['visibility'] as num?)?.toInt(),
       pop: (json['pop'] as num?)?.toDouble() ?? 0.0,
-      rain: (json['rain'] as num?)?.toDouble(),
-      snow: (json['snow'] as num?)?.toDouble(),
-      weather: (json['weather'] as List<dynamic>?)
-              ?.map((e) => WeatherCondition.fromJson(e))
+      rain: RainData.fromDynamic(json['rain']),
+      snow: SnowData.fromDynamic(json['snow']),
+      weather:
+          (json['weather'] as List<dynamic>?)
+              ?.map((e) => WeatherCondition.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      alerts:
+          (json['alerts'] as List<dynamic>?)
+              ?.map((e) => e.toString())
               .toList() ??
           [],
     );
+  }
+
+  static List<DailyWeather> fromTimelineJson(Map<String, dynamic> json) {
+    final dataList = json['data'] as List<dynamic>?;
+    return dataList
+            ?.map((e) => DailyWeather.fromJson(e as Map<String, dynamic>))
+            .toList() ??
+        [];
   }
 
   Map<String, dynamic> toJson() {
@@ -99,10 +118,12 @@ class DailyWeather {
       'wind_deg': windDeg,
       'clouds': clouds,
       'uvi': uvi,
+      'visibility': visibility,
       'pop': pop,
-      'rain': rain,
-      'snow': snow,
+      'rain': rain?.toJson(),
+      'snow': snow?.toJson(),
       'weather': weather.map((e) => e.toJson()).toList(),
+      'alerts': alerts,
     };
   }
 }

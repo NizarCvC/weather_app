@@ -19,6 +19,7 @@ class HourlyWeather {
   final RainData? rain;
   final SnowData? snow;
   final List<WeatherCondition> weather;
+  final List<String> alerts;
 
   HourlyWeather({
     required this.dt,
@@ -37,30 +38,45 @@ class HourlyWeather {
     this.rain,
     this.snow,
     required this.weather,
+    this.alerts = const [],
   });
 
   factory HourlyWeather.fromJson(Map<String, dynamic> json) {
     return HourlyWeather(
-      dt: json['dt'] ?? 0,
-      temp: (json['temp'] as num).toDouble(),
-      feelsLike: (json['feels_like'] as num).toDouble(),
-      pressure: json['pressure'] ?? 0,
-      humidity: json['humidity'] ?? 0,
-      dewPoint: (json['dew_point'] as num).toDouble(),
-      uvi: (json['uvi'] as num).toDouble(),
-      clouds: json['clouds'] ?? 0,
-      visibility: json['visibility'] ?? 0,
-      windSpeed: (json['wind_speed'] as num).toDouble(),
+      dt: (json['dt'] as num?)?.toInt() ?? 0,
+      temp: (json['temp'] as num?)?.toDouble() ?? 0.0,
+      feelsLike: (json['feels_like'] as num?)?.toDouble() ?? 0.0,
+      pressure: (json['pressure'] as num?)?.toInt() ?? 0,
+      humidity: (json['humidity'] as num?)?.toInt() ?? 0,
+      dewPoint: (json['dew_point'] as num?)?.toDouble() ?? 0.0,
+      uvi: (json['uvi'] as num?)?.toDouble() ?? 0.0,
+      clouds: (json['clouds'] as num?)?.toInt() ?? 0,
+      visibility: (json['visibility'] as num?)?.toInt() ?? 0,
+      windSpeed: (json['wind_speed'] as num?)?.toDouble() ?? 0.0,
       windGust: (json['wind_gust'] as num?)?.toDouble(),
-      windDeg: json['wind_deg'] ?? 0,
+      windDeg: (json['wind_deg'] as num?)?.toInt() ?? 0,
       pop: (json['pop'] as num?)?.toDouble() ?? 0.0,
-      rain: json['rain'] != null ? RainData.fromJson(json['rain']) : null,
-      snow: json['snow'] != null ? SnowData.fromJson(json['snow']) : null,
-      weather: (json['weather'] as List<dynamic>?)
-              ?.map((e) => WeatherCondition.fromJson(e))
+      rain: RainData.fromDynamic(json['rain']),
+      snow: SnowData.fromDynamic(json['snow']),
+      weather:
+          (json['weather'] as List<dynamic>?)
+              ?.map((e) => WeatherCondition.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      alerts:
+          (json['alerts'] as List<dynamic>?)
+              ?.map((e) => e.toString())
               .toList() ??
           [],
     );
+  }
+
+  static List<HourlyWeather> fromTimelineJson(Map<String, dynamic> json) {
+    final dataList = json['data'] as List<dynamic>?;
+    return dataList
+            ?.map((e) => HourlyWeather.fromJson(e as Map<String, dynamic>))
+            .toList() ??
+        [];
   }
 
   Map<String, dynamic> toJson() {
@@ -81,6 +97,7 @@ class HourlyWeather {
       'rain': rain?.toJson(),
       'snow': snow?.toJson(),
       'weather': weather.map((e) => e.toJson()).toList(),
+      'alerts': alerts,
     };
   }
 }
