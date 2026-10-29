@@ -1,6 +1,8 @@
 class SnowData {
   final double? oneHour;
 
+  double? get amount => oneHour;
+
   SnowData({this.oneHour});
 
   factory SnowData.fromJson(Map<String, dynamic> json) {

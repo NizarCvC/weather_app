@@ -15,7 +15,7 @@ class HourlyWeather {
   final double windSpeed;
   final double? windGust;
   final int windDeg;
-  final double pop;
+  final double? pop;
   final RainData? rain;
   final SnowData? snow;
   final List<WeatherCondition> weather;

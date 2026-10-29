@@ -35,7 +35,45 @@ class WeatherModel {
     this.next,
   });
 
-  /// Builds a unified [WeatherModel] from One Call API 4.0 separate endpoint responses.
+  List<String> get alertIds {
+    if (current != null && current!.alerts.isNotEmpty) {
+      return current!.alerts;
+    }
+    return alerts.map((a) => a.id).where((id) => id.isNotEmpty).toList();
+  }
+
+  WeatherModel copyWith({
+    String? cityName,
+    double? lat,
+    double? lon,
+    String? timezone,
+    int? timezoneOffset,
+    CurrentWeather? current,
+    List<MinutelyWeather>? minutely,
+    List<HourlyWeather>? fifteenMinutely,
+    List<HourlyWeather>? hourly,
+    List<DailyWeather>? daily,
+    List<WeatherAlert>? alerts,
+    String? prev,
+    String? next,
+  }) {
+    return WeatherModel(
+      cityName: cityName ?? this.cityName,
+      lat: lat ?? this.lat,
+      lon: lon ?? this.lon,
+      timezone: timezone ?? this.timezone,
+      timezoneOffset: timezoneOffset ?? this.timezoneOffset,
+      current: current ?? this.current,
+      minutely: minutely ?? this.minutely,
+      fifteenMinutely: fifteenMinutely ?? this.fifteenMinutely,
+      hourly: hourly ?? this.hourly,
+      daily: daily ?? this.daily,
+      alerts: alerts ?? this.alerts,
+      prev: prev ?? this.prev,
+      next: next ?? this.next,
+    );
+  }
+
   factory WeatherModel.fromResponses({
     required String cityName,
     required Map<String, dynamic> currentJson,
@@ -45,13 +83,23 @@ class WeatherModel {
     Map<String, dynamic>? dailyJson,
     List<Map<String, dynamic>>? alertsJson,
   }) {
+    final Map<String, dynamic> baseJson = currentJson.isNotEmpty
+        ? currentJson
+        : (hourlyJson ??
+              dailyJson ??
+              fifteenMinutelyJson ??
+              minutelyJson ??
+              {});
+
     return WeatherModel(
       cityName: cityName,
-      lat: (currentJson['lat'] as num?)?.toDouble() ?? 0.0,
-      lon: (currentJson['lon'] as num?)?.toDouble() ?? 0.0,
-      timezone: currentJson['timezone'] ?? '',
-      timezoneOffset: (currentJson['timezone_offset'] as num?)?.toInt() ?? 0,
-      current: CurrentWeather.fromJson(currentJson),
+      lat: (baseJson['lat'] as num?)?.toDouble() ?? 0.0,
+      lon: (baseJson['lon'] as num?)?.toDouble() ?? 0.0,
+      timezone: baseJson['timezone'] ?? '',
+      timezoneOffset: (baseJson['timezone_offset'] as num?)?.toInt() ?? 0,
+      current: currentJson.isNotEmpty
+          ? CurrentWeather.fromJson(currentJson)
+          : null,
       minutely: minutelyJson != null
           ? MinutelyWeather.fromTimelineJson(minutelyJson)
           : [],
@@ -59,16 +107,16 @@ class WeatherModel {
           ? HourlyWeather.fromTimelineJson(fifteenMinutelyJson)
           : [],
       hourly: hourlyJson != null
-          ? HourlyWeather.fromTimelineJson(hourlyJson).take(24).toList()
+          ? HourlyWeather.fromTimelineJson(hourlyJson)
           : [],
-      daily: dailyJson != null
-          ? DailyWeather.fromTimelineJson(dailyJson).take(7).toList()
-          : [],
+      daily: dailyJson != null ? DailyWeather.fromTimelineJson(dailyJson) : [],
       alerts: alertsJson != null
           ? alertsJson.map((e) => WeatherAlert.fromJson(e)).toList()
           : [],
-      prev: (dailyJson ?? hourlyJson ?? fifteenMinutelyJson)?['prev'] as String?,
-      next: (dailyJson ?? hourlyJson ?? fifteenMinutelyJson)?['next'] as String?,
+      prev:
+          (dailyJson ?? hourlyJson ?? fifteenMinutelyJson)?['prev'] as String?,
+      next:
+          (dailyJson ?? hourlyJson ?? fifteenMinutelyJson)?['next'] as String?,
     );
   }
 
@@ -129,38 +177,6 @@ class WeatherModel {
           [],
       prev: json['prev'] as String?,
       next: json['next'] as String?,
-    );
-  }
-
-  WeatherModel copyWith({
-    String? cityName,
-    double? lat,
-    double? lon,
-    String? timezone,
-    int? timezoneOffset,
-    CurrentWeather? current,
-    List<MinutelyWeather>? minutely,
-    List<HourlyWeather>? fifteenMinutely,
-    List<HourlyWeather>? hourly,
-    List<DailyWeather>? daily,
-    List<WeatherAlert>? alerts,
-    String? prev,
-    String? next,
-  }) {
-    return WeatherModel(
-      cityName: cityName ?? this.cityName,
-      lat: lat ?? this.lat,
-      lon: lon ?? this.lon,
-      timezone: timezone ?? this.timezone,
-      timezoneOffset: timezoneOffset ?? this.timezoneOffset,
-      current: current ?? this.current,
-      minutely: minutely ?? this.minutely,
-      fifteenMinutely: fifteenMinutely ?? this.fifteenMinutely,
-      hourly: hourly ?? this.hourly,
-      daily: daily ?? this.daily,
-      alerts: alerts ?? this.alerts,
-      prev: prev ?? this.prev,
-      next: next ?? this.next,
     );
   }
 

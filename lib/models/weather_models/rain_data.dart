@@ -1,6 +1,8 @@
 class RainData {
   final double? oneHour;
 
+  double? get amount => oneHour;
+
   RainData({this.oneHour});
 
   factory RainData.fromJson(Map<String, dynamic> json) {

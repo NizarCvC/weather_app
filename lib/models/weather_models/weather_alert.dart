@@ -1,26 +1,4 @@
-class AlertDescription {
-  final String language;
-  final String description;
-
-  AlertDescription({
-    required this.language,
-    required this.description,
-  });
-
-  factory AlertDescription.fromJson(Map<String, dynamic> json) {
-    return AlertDescription(
-      language: json['language'] ?? '',
-      description: json['description'] ?? '',
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'language': language,
-      'description': description,
-    };
-  }
-}
+import 'package:weather_app/models/weather_models/alert_description.dart';
 
 class WeatherAlert {
   final String id;
@@ -40,6 +18,21 @@ class WeatherAlert {
     required this.description,
     required this.tags,
   });
+
+  String get primaryDescription =>
+      description.isNotEmpty ? description.first.description : '';
+
+  String getDescription([String? lang]) {
+    if (description.isEmpty) return '';
+    if (lang != null && lang.isNotEmpty) {
+      final match = description.firstWhere(
+        (d) => d.language.toLowerCase().startsWith(lang.toLowerCase()),
+        orElse: () => description.first,
+      );
+      return match.description;
+    }
+    return description.first.description;
+  }
 
   factory WeatherAlert.fromJson(Map<String, dynamic> json) {
     final rawDesc = json['description'];
