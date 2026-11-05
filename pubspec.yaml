@@ -21,7 +21,7 @@ dependencies:
   shared_preferences: ^2.5.5
   dio_cache_interceptor: ^4.0.6
   geolocator: ^14.0.3
-  geocoding: ^4.0.0
+  geocoding: ^5.0.0
   flutter_dotenv: ^6.0.1
 
 dev_dependencies:
@@ -33,75 +33,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/Empty.png
-    - assets/weather/Weather Icon-1.svg
-    - assets/weather/Weather Icon-2.svg
-    - assets/weather/Weather Icon-3.svg
-    - assets/weather/Weather Icon-4.svg
-    - assets/weather/Weather Icon-5.svg
-    - assets/weather/Weather Icon-6.svg
-    - assets/weather/Weather Icon-7.svg
-    - assets/weather/Weather Icon-8.svg
-    - assets/weather/Weather Icon-9.svg
-    - assets/weather/Weather Icon-10.svg
-    - assets/weather/Weather Icon-11.svg
-    - assets/weather/Weather Icon-12.svg
-    - assets/weather/Weather Icon-13.svg
-    - assets/weather/Weather Icon-14.svg
-    - assets/weather/Weather Icon-15.svg
-    - assets/weather/Weather Icon-16.svg
-    - assets/weather/Weather Icon-17.svg
-    - assets/weather/Weather Icon-18.svg
-    - assets/weather/Weather Icon-19.svg
-    - assets/weather/Weather Icon-20.svg
-    - assets/weather/Weather Icon-21.svg
-    - assets/weather/Weather Icon-22.svg
-    - assets/weather/Weather Icon-23.svg
-    - assets/weather/Weather Icon-24.svg
-    - assets/weather/Weather Icon-25.svg
-    - assets/weather/Weather Icon-26.svg
-    - assets/weather/Weather Icon-27.svg
-    - assets/weather/Weather Icon-28.svg
-    - assets/weather/Weather Icon-29.svg
-    - assets/weather/Weather Icon-30.svg
-    - assets/weather/Weather Icon-31.svg
-    - assets/weather/Weather Icon-32.svg
-    - assets/weather/Weather Icon-33.svg
-    - assets/weather/Weather Icon-34.svg
-    - assets/weather/Weather Icon-35.svg
-    - assets/weather/Weather Icon-36.svg
-    - assets/weather/Weather Icon-37.svg
-    - assets/weather/Weather Icon-38.svg
-    - assets/weather/Weather Icon-39.svg
-    - assets/weather/Weather Icon-40.svg
-    - assets/weather/Weather Icon-41.svg
-    - assets/weather/Weather Icon-42.svg
-    - assets/weather/Weather Icon-43.svg
-    - assets/weather/Weather Icon-44.svg
-    - assets/weather/Weather Icon-45.svg
-    - assets/weather/Weather Icon-46.svg
-    - assets/weather/Weather Icon-47.svg
-    - assets/weather/Weather Icon-48.svg
-    - assets/weather/Weather Icon-49.svg
-    - assets/weather/Weather Icon-50.svg
-    - assets/weather/Weather Icon-51.svg
-    - assets/weather/Weather Icon-52.svg
-    - assets/weather/Weather Icon-53.svg
-    - assets/weather/Weather Icon-54.svg
-    - assets/weather/Weather Icon-55.svg
-    - assets/weather/Weather Icon-56.svg
-    - assets/weather/Weather Icon-57.svg
-    - assets/weather/Weather Icon-58.svg
-    - assets/weather/Weather Icon-59.svg
-    - assets/weather/Weather Icon-60.svg
-    - assets/weather/Weather Icon-61.svg
-    - assets/weather/Weather Icon-62.svg
-    - assets/weather/Weather Icon-63.svg
-    - assets/weather/Weather Icon.svg
-    - assets/icons/cloud.png
-    - assets/icons/humidity.png
-    - assets/icons/pressure.png
-    - assets/icons/rain.png
-    - assets/icons/uv.png
-    - assets/icons/vision.png
-    - assets/icons/wind.png
-    - assets/icons/feels_like.png
+    - assets/weather/
+    - assets/icons/
+    - .env

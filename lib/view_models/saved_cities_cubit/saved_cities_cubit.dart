@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:weather_app/models/query_params_models/weather_query_params.dart';
 import 'package:weather_app/models/weather_models/weather_model.dart';
 import 'package:weather_app/services/local_database_services.dart';
 import 'package:weather_app/services/weather_services.dart';
@@ -19,6 +21,12 @@ class SavedCitiesCubit extends Cubit<SavedCitiesState> {
       AppConstants.localDatabaseKey,
     );
     return fetchedCities ?? [];
+  }
+
+  Future<Location?> _getGeocodingByCityName(String cityName) async {
+    final geocoding = Geocoding();
+    List<Location> locations = await geocoding.locationFromAddress(cityName);
+    return locations.isEmpty ? null : locations.first;
   }
 
   Future<void> saveCityNameToLocalDatabase(String cityName) async {
@@ -88,8 +96,20 @@ class SavedCitiesCubit extends Cubit<SavedCitiesState> {
           i + batchSize > citiesList.length ? citiesList.length : i + batchSize,
         );
 
-        final futures = batch.map((cityName) {
-          return _weatherServices.getCityWeatherByCityName(cityName);
+        final futures = batch.map((cityName) async {
+          final location =
+              await _getGeocodingByCityName(cityName) ??
+              Location(
+                latitude: 0.0,
+                longitude: 0.0,
+                timestamp: DateTime.now(),
+              );
+          final params = WeatherQueryParams(
+            lat: location.latitude,
+            lon: location.longitude,
+            appid: AppConstants.apiKey,
+          );
+          return _weatherServices.getCurrentCityWeather(cityName, params);
         });
 
         final List<WeatherModel> batchResults = await Future.wait(futures);

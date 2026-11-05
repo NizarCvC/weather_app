@@ -6,4 +6,5 @@ class AppConstants {
       dotenv.env['API_KEY'] ??
       (throw Exception('API_KEY is missing in .env file'));
   static const String localDatabaseKey = 'saved_cities';
+  static const String defaultCityName = 'London';
 }

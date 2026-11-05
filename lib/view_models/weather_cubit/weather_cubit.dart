@@ -1,8 +1,10 @@
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:weather_app/models/query_params_models/weather_query_params.dart';
 import 'package:weather_app/models/weather_models/weather_model.dart';
 import 'package:weather_app/services/weather_services.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:weather_app/utils/app_constants.dart';
 
 part 'weather_state.dart';
 
@@ -17,7 +19,6 @@ class WeatherCubit extends Cubit<WeatherState> {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      debugPrint('Location services are disabled.');
       return null;
     }
 
@@ -25,19 +26,33 @@ class WeatherCubit extends Cubit<WeatherState> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        debugPrint('Location permissions are denied');
         return null;
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      debugPrint(
-        'Location permissions are permanently denied, we cannot request permissions.',
-      );
       return null;
     }
 
     return await Geolocator.getCurrentPosition();
+  }
+
+  Future<Location?> _getGeocodingByCityName(String cityName) async {
+    final geocoding = Geocoding();
+    List<Location> locations = await geocoding.locationFromAddress(cityName);
+    return locations.isEmpty ? null : locations.first;
+  }
+
+  Future<Placemark?> _getCityNameByGeocoding(
+    double latitude,
+    double longitude,
+  ) async {
+    final geocoding = Geocoding();
+    List<Placemark> placemarks = await geocoding.placemarkFromCoordinates(
+      latitude,
+      longitude,
+    );
+    return placemarks.isEmpty ? null : placemarks.first;
   }
 
   Future<void> fetchCurrentLocationWeather() async {
@@ -45,19 +60,38 @@ class WeatherCubit extends Cubit<WeatherState> {
 
     try {
       Position? position = await _determinePosition();
-      WeatherModel weatherInfo;
 
       if (position != null) {
-        weatherInfo = await _weatherServices.getCityWeatherByCoordinate(
+        final params = WeatherQueryParams(
+          lat: position.latitude,
+          lon: position.longitude,
+          appid: AppConstants.apiKey,
+        );
+
+        final placemark = await _getCityNameByGeocoding(
           position.latitude,
           position.longitude,
         );
+
+        if (placemark == null || placemark.locality == null) {
+          emit(
+            FetchingWeatherInfoFailed(
+              'There is no city found for the current location.',
+            ),
+          );
+          return;
+        }
+
+        WeatherModel weatherInfo = await _weatherServices.getCurrentCityWeather(
+          placemark.locality!,
+          params,
+        );
+
+        emit(WeatherInfoFetched(weatherModel: weatherInfo));
       } else {
-        weatherInfo = await _weatherServices.getCityWeatherByCityName('Makkah');
+        await fetchWeatherInfo(AppConstants.defaultCityName);
       }
-      emit(WeatherInfoFetched(weatherModel: weatherInfo));
     } catch (e) {
-      debugPrint('Error has occurred $e');
       emit(FetchingWeatherInfoFailed(e.toString()));
     }
   }
@@ -66,12 +100,29 @@ class WeatherCubit extends Cubit<WeatherState> {
     emit(FetchingWeatherInfo());
 
     try {
-      var weatherInfo = await _weatherServices.getCityWeatherByCityName(
+      final location = await _getGeocodingByCityName(cityName);
+
+      if (location == null) {
+        emit(
+          FetchingWeatherInfoFailed(
+            'There is no city with this name: $cityName.',
+          ),
+        );
+        return;
+      }
+
+      final params = WeatherQueryParams(
+        lat: location.latitude,
+        lon: location.longitude,
+        appid: AppConstants.apiKey,
+      );
+
+      var weatherInfo = await _weatherServices.getCurrentCityWeather(
         cityName,
+        params,
       );
       emit(WeatherInfoFetched(weatherModel: weatherInfo));
     } catch (e) {
-      debugPrint('Error has occurred $e');
       emit(FetchingWeatherInfoFailed(e.toString()));
     }
   }
