@@ -54,7 +54,7 @@ class CurrentWeatherPage extends StatelessWidget {
           current is FetchingWeatherInfoFailed,
       builder: (context, state) {
         if (state is WeatherInfoFetched) {
-          final weatherInfo = state.weatherModel;
+          final weatherInfo = state.cityWeatherModel;
           return Scaffold(
             extendBody: true,
             body: CurrentCityWeatherWidget(weatherInfo: weatherInfo),

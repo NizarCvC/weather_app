@@ -2,7 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:weather_app/models/query_params_models/weather_query_params.dart';
-import 'package:weather_app/models/weather_models/weather_model.dart';
+import 'package:weather_app/models/weather_models/city_weather.dart';
+import 'package:weather_app/services/geocoding_services.dart';
 import 'package:weather_app/services/weather_services.dart';
 import 'package:weather_app/utils/app_constants.dart';
 
@@ -12,12 +13,14 @@ class WeatherCubit extends Cubit<WeatherState> {
   WeatherCubit() : super(WeatherInitial());
 
   final _weatherServices = WeatherServicesImpl();
+  final _geocodingServices = GeocodingServicesImpl();
 
   Future<Position?> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
     if (!serviceEnabled) {
       return null;
     }
@@ -35,12 +38,6 @@ class WeatherCubit extends Cubit<WeatherState> {
     }
 
     return await Geolocator.getCurrentPosition();
-  }
-
-  Future<Location?> _getGeocodingByCityName(String cityName) async {
-    final geocoding = Geocoding();
-    List<Location> locations = await geocoding.locationFromAddress(cityName);
-    return locations.isEmpty ? null : locations.first;
   }
 
   Future<Placemark?> _getCityNameByGeocoding(
@@ -82,12 +79,16 @@ class WeatherCubit extends Cubit<WeatherState> {
           return;
         }
 
-        WeatherModel weatherInfo = await _weatherServices.getCurrentCityWeather(
-          placemark.locality!,
+        final weatherInfo = await _weatherServices.getCurrentCityWeather(
           params,
         );
 
-        emit(WeatherInfoFetched(weatherModel: weatherInfo));
+        final cityWeatherModel = CityWeather(
+          cityName: placemark.locality!,
+          weatherModel: weatherInfo,
+        );
+
+        emit(WeatherInfoFetched(cityWeatherModel: cityWeatherModel));
       } else {
         await fetchWeatherInfo(AppConstants.defaultCityName);
       }
@@ -100,28 +101,21 @@ class WeatherCubit extends Cubit<WeatherState> {
     emit(FetchingWeatherInfo());
 
     try {
-      final location = await _getGeocodingByCityName(cityName);
-
-      if (location == null) {
-        emit(
-          FetchingWeatherInfoFailed(
-            'There is no city with this name: $cityName.',
-          ),
-        );
-        return;
-      }
+      final location = await _geocodingServices.getCityGeocoding(cityName);
 
       final params = WeatherQueryParams(
-        lat: location.latitude,
-        lon: location.longitude,
+        lat: location.lat,
+        lon: location.lon,
         appid: AppConstants.apiKey,
       );
 
-      var weatherInfo = await _weatherServices.getCurrentCityWeather(
-        cityName,
-        params,
+      final weatherInfo = await _weatherServices.getCurrentCityWeather(params);
+
+      final cityWeatherMode = CityWeather(
+        cityName: cityName,
+        weatherModel: weatherInfo,
       );
-      emit(WeatherInfoFetched(weatherModel: weatherInfo));
+      emit(WeatherInfoFetched(cityWeatherModel: cityWeatherMode));
     } catch (e) {
       emit(FetchingWeatherInfoFailed(e.toString()));
     }

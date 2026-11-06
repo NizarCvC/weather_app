@@ -1,13 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/models/geocoding_models/city_model.dart';
-import 'package:weather_app/services/weather_services.dart';
+import 'package:weather_app/services/geocoding_services.dart';
 
 part 'search_state.dart';
 
 class SearchCubit extends Cubit<SearchState> {
   SearchCubit() : super(SearchInitial());
 
-  final _weatherServices = WeatherServicesImpl();
+  final _weatherServices = GeocodingServicesImpl();
 
   Future<void> searchingWeather(String cityName) async {
     emit(SearchingWeatherName());

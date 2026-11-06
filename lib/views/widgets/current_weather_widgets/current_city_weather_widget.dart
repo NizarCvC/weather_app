@@ -3,12 +3,12 @@ import 'package:adv_flutter_weather/bg/weather_bg.dart';
 import 'package:adv_flutter_weather/utils/weather_type.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:weather_app/models/weather_models/weather_model.dart';
+import 'package:weather_app/models/weather_models/city_weather.dart';
 import 'package:weather_app/utils/theme/app_colors.dart';
 import 'package:weather_app/views/widgets/shared_widgets/hourly_daily_forecast_widget.dart';
 
 class CurrentCityWeatherWidget extends StatefulWidget {
-  final WeatherModel? weatherInfo;
+  final CityWeather? weatherInfo;
   final bool isLoading;
 
   const CurrentCityWeatherWidget({super.key, required this.weatherInfo})
@@ -84,7 +84,7 @@ class _CurrentCityWeatherWidgetState extends State<CurrentCityWeatherWidget>
         children: [
           WeatherBg(
             weatherType:
-                widget.weatherInfo?.current?.weatherScreen ??
+                widget.weatherInfo?.weatherModel.current?.weatherScreen ??
                 WeatherType.sunnyNight,
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
@@ -104,11 +104,11 @@ class _CurrentCityWeatherWidgetState extends State<CurrentCityWeatherWidget>
               ),
               SizedBox(height: size.height * 0.02),
               _buildTextWithGlassBackground(
-                "${(widget.isLoading) ? '--' : widget.weatherInfo?.current?.temp.round() ?? 'Unknown'}°",
+                "${(widget.isLoading) ? '--' : widget.weatherInfo?.weatherModel.current?.temp.round() ?? 'Unknown'}°",
               ),
               SizedBox(height: size.height * 0.035),
               SvgPicture.asset(
-                widget.weatherInfo?.current?.weather.first.icon ??
+                widget.weatherInfo?.weatherModel.current?.weather.first.icon ??
                     'assets/weather/Weather Icon-1.svg',
                 height: size.height * 0.18,
               ),
@@ -161,10 +161,10 @@ class _CurrentCityWeatherWidgetState extends State<CurrentCityWeatherWidget>
                           physics: const NeverScrollableScrollPhysics(),
                           children: [
                             HourlyDailyForecastWidget.hourly(
-                              hourlyList: widget.weatherInfo?.hourly ?? [],
+                              hourlyList: widget.weatherInfo?.weatherModel.hourly ?? [],
                             ),
                             HourlyDailyForecastWidget.daily(
-                              dailyList: widget.weatherInfo?.daily ?? [],
+                              dailyList: widget.weatherInfo?.weatherModel.daily ?? [],
                             ),
                           ],
                         ),

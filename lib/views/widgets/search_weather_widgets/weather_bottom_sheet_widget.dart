@@ -77,12 +77,14 @@ class WeatherBottomSheetWidget extends StatelessWidget {
                   child: Stack(
                     alignment: .topLeft,
                     children: [
-                      CurrentCityWeatherWidget(weatherInfo: state.weatherModel),
+                      CurrentCityWeatherWidget(
+                        weatherInfo: state.cityWeatherModel,
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: _buildSaveWeatherIconButton(context, () {
                           savedCitiesCubit.saveCityNameToLocalDatabase(
-                            state.weatherModel.cityName,
+                            state.cityWeatherModel.cityName,
                           );
                         }),
                       ),

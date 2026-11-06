@@ -7,9 +7,9 @@ final class WeatherInitial extends WeatherState {}
 final class FetchingWeatherInfo extends WeatherState {}
 
 final class WeatherInfoFetched extends WeatherState {
-  final WeatherModel weatherModel;
+  final CityWeather cityWeatherModel;
 
-  WeatherInfoFetched({required this.weatherModel});
+  WeatherInfoFetched({required this.cityWeatherModel});
 }
 
 final class FetchingWeatherInfoFailed extends WeatherState {

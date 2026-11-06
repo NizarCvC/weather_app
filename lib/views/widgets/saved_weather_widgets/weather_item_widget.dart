@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:weather_app/models/weather_models/weather_model.dart';
+import 'package:weather_app/models/weather_models/city_weather.dart';
 import 'package:weather_app/utils/theme/app_colors.dart';
 import 'package:weather_app/view_models/saved_cities_cubit/saved_cities_cubit.dart';
 
 class WeatherItemWidget extends StatefulWidget {
-  final WeatherModel cityWeather;
+  final CityWeather cityWeather;
 
   const WeatherItemWidget({
     super.key,
@@ -98,11 +98,11 @@ class _WeatherItemWidgetState extends State<WeatherItemWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '${widget.cityWeather.current?.temp.round() ?? 'Unknown'}°',
+                      '${widget.cityWeather.weatherModel.current?.temp.round() ?? 'Unknown'}°',
                       style: textTheme.displaySmall,
                     ),
                     SvgPicture.asset(
-                      widget.cityWeather.current?.weather.first.icon ??
+                      widget.cityWeather.weatherModel.current?.weather.first.icon ??
                           'assets/weather/Weather Icon-14.svg',
                       height: size.height * 0.06,
                     ),

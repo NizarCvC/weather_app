@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:weather_app/models/query_params_models/weather_query_params.dart';
-import 'package:weather_app/models/weather_models/weather_model.dart';
+import 'package:weather_app/models/weather_models/city_weather.dart';
+import 'package:weather_app/services/geocoding_services.dart';
 import 'package:weather_app/services/local_database_services.dart';
 import 'package:weather_app/services/weather_services.dart';
 import 'package:weather_app/utils/app_constants.dart';
@@ -13,20 +13,15 @@ class SavedCitiesCubit extends Cubit<SavedCitiesState> {
 
   final _localDatabaseServices = LocalDatabaseServicesImpl();
   final _weatherServices = WeatherServicesImpl();
-  List<WeatherModel> _savedCitiesWeather = [];
-  List<WeatherModel> get savedCitiesWeather => _savedCitiesWeather;
+  final _geocodingServices = GeocodingServicesImpl();
+  List<CityWeather> _savedCitiesWeather = [];
+  List<CityWeather> get savedCitiesWeather => _savedCitiesWeather;
 
   Future<List<String>> _prepareSavedCitiesList() async {
     final fetchedCities = await _localDatabaseServices.getStringList(
       AppConstants.localDatabaseKey,
     );
     return fetchedCities ?? [];
-  }
-
-  Future<Location?> _getGeocodingByCityName(String cityName) async {
-    final geocoding = Geocoding();
-    List<Location> locations = await geocoding.locationFromAddress(cityName);
-    return locations.isEmpty ? null : locations.first;
   }
 
   Future<void> saveCityNameToLocalDatabase(String cityName) async {
@@ -87,7 +82,7 @@ class SavedCitiesCubit extends Cubit<SavedCitiesState> {
         return;
       }
 
-      final List<WeatherModel> allWeatherResults = [];
+      final List<CityWeather> allWeatherResults = [];
       const int batchSize = 5;
 
       for (int i = 0; i < citiesList.length; i += batchSize) {
@@ -97,22 +92,22 @@ class SavedCitiesCubit extends Cubit<SavedCitiesState> {
         );
 
         final futures = batch.map((cityName) async {
-          final location =
-              await _getGeocodingByCityName(cityName) ??
-              Location(
-                latitude: 0.0,
-                longitude: 0.0,
-                timestamp: DateTime.now(),
-              );
+          final location = await
+              _geocodingServices.getCityGeocoding(cityName);
           final params = WeatherQueryParams(
-            lat: location.latitude,
-            lon: location.longitude,
+            lat: location.lat,
+            lon: location.lon,
             appid: AppConstants.apiKey,
           );
-          return _weatherServices.getCurrentCityWeather(cityName, params);
+
+          final cityWeather = CityWeather(
+            cityName: cityName,
+            weatherModel: await _weatherServices.getCurrentCityWeather(params),
+          );
+          return cityWeather;
         });
 
-        final List<WeatherModel> batchResults = await Future.wait(futures);
+        final List<CityWeather> batchResults = await Future.wait(futures);
         allWeatherResults.addAll(batchResults);
       }
       _savedCitiesWeather = allWeatherResults;
