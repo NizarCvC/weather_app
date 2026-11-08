@@ -4,6 +4,8 @@ import 'package:weather_app/models/weather_models/hourly_weather.dart';
 import 'package:weather_app/models/weather_models/minutely_weather.dart';
 import 'package:weather_app/models/weather_models/weather_alert.dart';
 
+enum WeatherDataKind { current, minutely, fifteenMinutely, hourly, daily }
+
 class WeatherModel {
   final double lat;
   final double lon;
@@ -69,7 +71,7 @@ class WeatherModel {
       'lat': lat,
       'lon': lon,
       'timezone': timezone,
-      'timezoneOffset': timezoneOffset,
+      'timezone_offset': timezoneOffset,
       'current': current?.toJson(),
       'minutely': minutely.map((x) => x.toJson()).toList(),
       'fifteenMinutely': fifteenMinutely.map((x) => x.toJson()).toList(),
@@ -81,20 +83,89 @@ class WeatherModel {
     };
   }
 
-  factory WeatherModel.fromJson(Map<String, dynamic> map) {
+  factory WeatherModel.fromJson(
+    Map<String, dynamic> map, {
+    WeatherDataKind? dataKind,
+  }) {
+    final prev = map['prev'] as String?;
+    final next = map['next'] as String?;
+    final data = (map['data'] as List<dynamic>?)?.cast<Map<String, dynamic>>();
+    final kind = data == null || data.isEmpty
+        ? null
+        : dataKind ?? _inferDataKind(data, next ?? prev);
+    final currentRecord = kind == WeatherDataKind.current
+        ? data!.first
+        : map['current'] as Map<String, dynamic>?;
+
     return WeatherModel(
-      lat: map['lat'] as double,
-      lon: map['lon'] as double,
+      lat: (map['lat'] as num).toDouble(),
+      lon: (map['lon'] as num).toDouble(),
       timezone: map['timezone'] as String,
-      timezoneOffset: map['timezoneOffset'] as int,
-      current: map['current'] != null ? CurrentWeather.fromJson(map['current'] as Map<String,dynamic>) : null,
-      minutely: List<MinutelyWeather>.from((map['minutely'] as List<int>).map<MinutelyWeather>((x) => MinutelyWeather.fromJson(x as Map<String,dynamic>),),),
-      fifteenMinutely: List<HourlyWeather>.from((map['fifteenMinutely'] as List<int>).map<HourlyWeather>((x) => HourlyWeather.fromJson(x as Map<String,dynamic>),),),
-      hourly: List<HourlyWeather>.from((map['hourly'] as List<int>).map<HourlyWeather>((x) => HourlyWeather.fromJson(x as Map<String,dynamic>),),),
-      daily: List<DailyWeather>.from((map['daily'] as List<int>).map<DailyWeather>((x) => DailyWeather.fromJson(x as Map<String,dynamic>),),),
-      alerts: List<WeatherAlert>.from((map['alerts'] as List<int>).map<WeatherAlert>((x) => WeatherAlert.fromJson(x as Map<String,dynamic>),),),
-      prev: map['prev'] != null ? map['prev'] as String : null,
-      next: map['next'] != null ? map['next'] as String : null,
+      timezoneOffset: (map['timezone_offset'] ?? map['timezoneOffset']) as int,
+      current: currentRecord == null
+          ? null
+          : CurrentWeather.fromJson(currentRecord),
+      minutely: kind == WeatherDataKind.minutely
+          ? MinutelyWeather.fromTimelineJson(map)
+          : _readList(map['minutely'], MinutelyWeather.fromJson),
+      fifteenMinutely: kind == WeatherDataKind.fifteenMinutely
+          ? HourlyWeather.fromTimelineJson(map)
+          : _readList(map['fifteenMinutely'], HourlyWeather.fromJson),
+      hourly: kind == WeatherDataKind.hourly
+          ? HourlyWeather.fromTimelineJson(map)
+          : _readList(map['hourly'], HourlyWeather.fromJson),
+      daily: kind == WeatherDataKind.daily
+          ? DailyWeather.fromTimelineJson(map)
+          : _readList(map['daily'], DailyWeather.fromJson),
+      alerts: _readList(map['alerts'], WeatherAlert.fromJson),
+      prev: prev,
+      next: next,
     );
+  }
+
+  static List<T> _readList<T>(
+    Object? value,
+    T Function(Map<String, dynamic>) fromJson,
+  ) {
+    return (value as List<dynamic>?)
+            ?.cast<Map<String, dynamic>>()
+            .map(fromJson)
+            .toList() ??
+        <T>[];
+  }
+
+  static WeatherDataKind _inferDataKind(
+    List<Map<String, dynamic>> data,
+    String? pageUrl,
+  ) {
+    final path = pageUrl == null ? null : Uri.tryParse(pageUrl)?.path;
+    final timelineKind = switch (path?.split('/').last) {
+      '1min' => WeatherDataKind.minutely,
+      '15min' => WeatherDataKind.fifteenMinutely,
+      '1h' => WeatherDataKind.hourly,
+      '1d' || '1day' => WeatherDataKind.daily,
+      _ => null,
+    };
+    if (timelineKind != null) return timelineKind;
+
+    final first = data.first;
+    if (first['temp'] is Map) return WeatherDataKind.daily;
+    if (first.containsKey('precipitation')) return WeatherDataKind.minutely;
+
+    const quarterHour = 15 * Duration.secondsPerMinute;
+    final timestamp = first['dt'] as int?;
+    if (data.length == 1 &&
+        (first.containsKey('sunrise') ||
+            first.containsKey('sunset') ||
+            (timestamp != null && timestamp % quarterHour != 0))) {
+      return WeatherDataKind.current;
+    }
+    if (data.any((entry) {
+      final timestamp = entry['dt'] as int?;
+      return timestamp != null && timestamp % Duration.secondsPerHour != 0;
+    })) {
+      return WeatherDataKind.fifteenMinutely;
+    }
+    return WeatherDataKind.hourly;
   }
 }

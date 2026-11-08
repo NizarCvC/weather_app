@@ -7,6 +7,6 @@ class ApiPaths {
   static const String minutelyForecastUrl = '$weatherBaseUrl/timeline/1min';
   static const String fifteenMinuteForecastUrl = '$weatherBaseUrl/timeline/15min';
   static const String hourlyForecastUrl = '$weatherBaseUrl/timeline/1h';
-  static const String dailyForecastUrl = '$weatherBaseUrl/timeline/1d';
+  static const String dailyForecastUrl = '$weatherBaseUrl/timeline/1day';
   static const String alertForecastUrl = '$geocodingUrl/alert';
 }

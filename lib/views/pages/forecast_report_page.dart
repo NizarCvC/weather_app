@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/models/weather_models/weather_model.dart';
+import 'package:weather_app/models/weather_models/city_weather.dart';
 import 'package:weather_app/utils/app_assets.dart';
 import 'package:weather_app/views/widgets/forecast_report_widgets/weather_detail_card.dart';
 import 'package:weather_app/views/widgets/forecast_report_widgets/weather_day_widget.dart';
 import 'package:weather_app/views/widgets/shared_widgets/hourly_daily_forecast_widget.dart';
 
 class ForecastReportPage extends StatelessWidget {
-  final WeatherModel weatherModel;
-  const ForecastReportPage({super.key, required this.weatherModel});
+  final CityWeather cityWeatherModel;
+  const ForecastReportPage({super.key, required this.cityWeatherModel});
 
   Widget _buildTitle({required BuildContext context, required String title}) {
     final size = MediaQuery.of(context).size;
@@ -39,8 +39,8 @@ class ForecastReportPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final current = weatherModel.current!;
-    final windSpeedKmh = (current.windSpeed * 3.6).round(); 
+    final current = cityWeatherModel.weatherModel.current!;
+    final windSpeedKmh = (current.windSpeed * 3.6).round();
     final visibilityKm = (current.visibility / 1000).toStringAsFixed(1);
     var weatherCards = [
       WeatherDetailCard(
@@ -103,7 +103,7 @@ class ForecastReportPage extends StatelessWidget {
               SizedBox(
                 height: size.height * 0.2,
                 child: HourlyDailyForecastWidget.hourly(
-                  hourlyList: weatherModel.hourly,
+                  hourlyList: cityWeatherModel.weatherModel.hourly,
                 ),
               ),
               _buildTitle(context: context, title: 'Next forecast'),
@@ -111,9 +111,10 @@ class ForecastReportPage extends StatelessWidget {
               ListView.separated(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: weatherModel.daily.length,
-                itemBuilder: (context, index) =>
-                    WeatherDayWidget(dailyWeather: weatherModel.daily[index]),
+                itemCount: cityWeatherModel.weatherModel.daily.length,
+                itemBuilder: (context, index) => WeatherDayWidget(
+                  dailyWeather: cityWeatherModel.weatherModel.daily[index],
+                ),
                 separatorBuilder: (context, index) =>
                     SizedBox(height: size.height * 0.02),
               ),

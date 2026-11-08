@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weather_app/models/weather_models/weather_model.dart';
+import 'package:weather_app/models/weather_models/city_weather.dart';
 import 'package:weather_app/utils/router/app_routes.dart';
 import 'package:weather_app/view_models/saved_cities_cubit/saved_cities_cubit.dart';
 import 'package:weather_app/view_models/search_cubit/search_cubit.dart';
@@ -34,9 +34,9 @@ class AppRouter {
       case AppRoutes.forecastReportWeather:
         return MaterialPageRoute(
           builder: (_) {
-            final WeatherModel weatherModel =
-                settings.arguments as WeatherModel;
-            return ForecastReportPage(weatherModel: weatherModel);
+            final CityWeather cityWeatherModel =
+                settings.arguments as CityWeather;
+            return ForecastReportPage(cityWeatherModel: cityWeatherModel);
           },
         );
       case AppRoutes.savedWeathers:

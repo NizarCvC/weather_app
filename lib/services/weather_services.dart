@@ -81,7 +81,7 @@ class WeatherServicesImpl implements WeatherServices {
       );
 
       final weatherResponse = await dio.get(
-        ApiPaths.currentWeatherUrl,
+        ApiPaths.dailyForecastUrl,
         queryParameters: weatherQueryParams.toMap(),
       );
 
@@ -89,7 +89,7 @@ class WeatherServicesImpl implements WeatherServices {
         throw Exception(weatherResponse.statusMessage);
       }
 
-      return WeatherModel.fromJson(weatherResponse.data).daily;
+      return WeatherModel.fromJson(weatherResponse.data).daily.take(7).toList();
     } catch (e) {
       rethrow;
     }
